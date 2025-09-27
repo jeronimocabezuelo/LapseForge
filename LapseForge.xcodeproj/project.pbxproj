@@ -27,6 +27,7 @@
 		74BD69672E477F9D00532A24 /* IntPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD69662E477F9D00532A24 /* IntPicker.swift */; };
 		74BD69692E477FB700532A24 /* TimeIntervalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */; };
 		74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD696A2E47A78E00532A24 /* Array+Extension.swift */; };
+		74D769702E8805AE0076BCD4 /* DisplayedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */; };
 		74E15BE12E6204C200E148F7 /* ImportSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E15BE02E6204C200E148F7 /* ImportSequenceView.swift */; };
 		74E15BE32E6609BF00E148F7 /* ExporterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E15BE22E6609BF00E148F7 /* ExporterButton.swift */; };
 		74E15BE52E6EE0A900E148F7 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E15BE42E6EE0A900E148F7 /* CustomAlert.swift */; };
@@ -64,6 +65,7 @@
 		74BD69662E477F9D00532A24 /* IntPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntPicker.swift; sourceTree = "<group>"; };
 		74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalPicker.swift; sourceTree = "<group>"; };
 		74BD696A2E47A78E00532A24 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayedTextView.swift; sourceTree = "<group>"; };
 		74E15BE02E6204C200E148F7 /* ImportSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSequenceView.swift; sourceTree = "<group>"; };
 		74E15BE22E6609BF00E148F7 /* ExporterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterButton.swift; sourceTree = "<group>"; };
 		74E15BE42E6EE0A900E148F7 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 		74BD69652E477F8C00532A24 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */,
 				74E15BE42E6EE0A900E148F7 /* CustomAlert.swift */,
 				74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */,
 				74BD69662E477F9D00532A24 /* IntPicker.swift */,
@@ -267,7 +270,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					7448D60F2E3FCBC100D0CB5C = {
 						CreatedOnToolsVersion = 16.3;
@@ -339,6 +342,7 @@
 				7448D6632E41185900D0CB5C /* ProjectsListView.swift in Sources */,
 				74BD69622E46588700532A24 /* TimeInterval+Extension.swift in Sources */,
 				741AF8332E48C0FA009ACEFA /* ConfigurationSequenceView.swift in Sources */,
+				74D769702E8805AE0076BCD4 /* DisplayedTextView.swift in Sources */,
 				7448D6612E41184C00D0CB5C /* LapseProject.swift in Sources */,
 				74BD695F2E46586800532A24 /* TimeLineView.swift in Sources */,
 				741AF8382E4B49B4009ACEFA /* CaptureView.swift in Sources */,
@@ -361,6 +365,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -390,6 +395,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -425,6 +431,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -454,6 +461,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -485,8 +493,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_CAMERA = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LapseForge/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -533,8 +544,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_CAMERA = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LapseForge/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
