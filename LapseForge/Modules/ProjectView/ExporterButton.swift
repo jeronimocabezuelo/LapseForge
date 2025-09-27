@@ -90,21 +90,17 @@ class Exporter: ObservableObject {
     }
     
     func exportLapse(project: LapseProject, fps: Int = 30, frameTimes: [TimeInterval], size: CGSize, at fileUrl: URL) async throws {
-        let imagesData = frameTimes.enumerated().compactMap({
-//            print("Obteniendo data para el frame: \($0.offset)")
-            return project.captureData(at: $0.element)
+        let imagesData = frameTimes.compactMap({
+            return project.captureData(at: $0)
         })
-        let uiImages = imagesData.enumerated().compactMap({
-//            print("Transformando a UIImage para el frame: \($0.offset)")
-            return UIImage(data: $0.element)
+        let uiImages = imagesData.compactMap({
+            return UIImage(data: $0)
         })
-//        let normalizedImages = uiImages.enumerated().map({
-//            print("Redimensionando para el frame: \($0.offset), anterior size: \($0.element.size), nuevo size: \(size)")
-//            return $0.element/*.resized(to: size)*/
-//        })
-        let cgImages = uiImages/*normalizedImages*/.enumerated().compactMap({
-//            print("Transformando a CGImage para el frame: \($0.offset)")
-            return $0.element.cgImage
+        let normalizedImages = uiImages.map({
+            $0.normalized.resized(to: size)
+        })
+        let cgImages = normalizedImages.compactMap({
+            return $0.cgImage
         })
         
         guard frameTimes.count == cgImages.count else {
@@ -345,6 +341,17 @@ private extension UIImage {
             let y = (targetSize.height - newSize.height) / 2
             draw(in: CGRect(origin: CGPoint(x: x, y: y), size: newSize))
         }
+    }
+}
+
+extension UIImage {
+    var normalized: UIImage {
+        if imageOrientation == .up { return self }
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        draw(in: CGRect(origin: .zero, size: size))
+        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return normalizedImage ?? self
     }
 }
 
