@@ -35,6 +35,7 @@ struct PreviewView: View {
                         Image(systemName: isPlaying ? "pause.fill" : "play.fill")
                             .font(.title)
                             .padding()
+                            .squareByIntrinsic()
                             .onTapGesture(perform: togglePlayback)
                             .glassEffect(.regular.interactive())
                         Spacer(minLength: .zero)

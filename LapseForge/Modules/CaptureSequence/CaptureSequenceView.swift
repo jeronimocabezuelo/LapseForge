@@ -162,6 +162,7 @@ struct CaptureSequenceView: View {
                         .font(.largeTitle)
                         .foregroundColor(.white)
                         .padding()
+                        .squareByIntrinsic()
                         .glassEffect(.regular.tint(isRecording ? .red : .green).interactive())
                 })
                 

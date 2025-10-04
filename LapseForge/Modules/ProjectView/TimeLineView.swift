@@ -115,18 +115,16 @@ struct TimeLineView: View {
     
     @ViewBuilder
     var addSequenceButton: some View {
-        Button(
-            .Project.newSequenceAlertTitle,
-            systemImage: "plus",
-            action: {
-                showConfirmationDialog = true
-            }
-        )
-        .font(.title)
-        .labelStyle(.iconOnly)
-        .controlSize(.extraLarge)
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        Button(action: {
+            showConfirmationDialog = true
+        }, label: {
+            Image(systemName: "plus")
+                .font(.title)
+                .padding()
+                .squareByIntrinsic()
+                .glassEffect(.regular.interactive())
+        })
+        .buttonStyle(.plain)
         .padding(.horizontal, 14)
         .confirmationDialog(
             .Project.newSequenceAlertTitle,
