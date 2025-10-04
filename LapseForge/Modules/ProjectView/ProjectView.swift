@@ -144,4 +144,3 @@ struct ProjectView: View {
         ProjectView(project: .mock, exporter: .init())
     }
 }
-
