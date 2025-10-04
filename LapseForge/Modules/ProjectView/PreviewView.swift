@@ -10,8 +10,8 @@ import SwiftUI
 struct PreviewView: View {
     var project: LapseProject
     @Binding var scrubber: TimeInterval
+    @Binding var isPlaying: Bool
     
-    @State private var isPlaying = false
     @State private var playbackTask: Task<Void, Never>?
     
     var body: some View {

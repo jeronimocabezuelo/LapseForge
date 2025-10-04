@@ -17,6 +17,7 @@ struct TimeLineView: View {
     @Binding var scrubber: TimeInterval
     @Binding var selectedSequence: LapseSequence?
     @Binding var showPhotoPicker: Bool
+    @Binding var isPlaying: Bool
     
     let scrollCoordinateSpace: NamedCoordinateSpace = .named("Scroll")
     let imageWidth = 20
@@ -80,7 +81,10 @@ struct TimeLineView: View {
                     scrollContentHeight = newHeight
                 }
                 .onChange(of: innerGeo.frame(in: scrollCoordinateSpace).minX) { _, newOffset in
-                    updateSelectedSecond(withOffset: newOffset)
+                    // Solo actualizamos el scrubber desde geometría si NO estamos en reproducción
+                    if !isPlaying {
+                        updateSelectedSecond(withOffset: newOffset)
+                    }
                 }
         }
     }
@@ -167,13 +171,18 @@ struct TimeLineView: View {
         }
         .alert(model: $alertModel)
         .onChange(of: scrubber) { _, newValue in
-            position.scrollTo(x: newValue * pixelsPerSecond)
+            guard pixelsPerSecond > 0 else { return }
+            if isPlaying {
+                position.scrollTo(x: newValue * pixelsPerSecond)
+            }
         }
     }
     
     private func updateSelectedSecond(withOffset offset: CGFloat) {
+        guard pixelsPerSecond > 0 else { return }
         let newScrubber = max(min(-offset / pixelsPerSecond, project.totalDuration), .zero)
-        self.scrubber = newScrubber
+        if abs(scrubber - newScrubber) <= 0.001 { return }
+        scrubber = newScrubber
     }
 }
 

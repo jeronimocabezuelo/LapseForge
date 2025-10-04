@@ -11,6 +11,7 @@ private class ProjectViewModel: ObservableObject {
     @Published var selectedSequence: LapseSequence?
     @Published var scrubber: TimeInterval = .zero
     @Published var showPhotoPicker: Bool = false
+    @Published var isPlaying: Bool = false
     
     @Published var catalogSequence: LapseSequence?
     @Published var pickedUrl: URL?
@@ -36,7 +37,8 @@ struct ProjectView: View {
             // Previsualización
             PreviewView(
                 project: project,
-                scrubber: $viewModel.scrubber
+                scrubber: $viewModel.scrubber,
+                isPlaying: $viewModel.isPlaying
             )
             
             // Línea de tiempo avanzada
@@ -44,7 +46,8 @@ struct ProjectView: View {
                 project: project,
                 scrubber: $viewModel.scrubber,
                 selectedSequence: $viewModel.selectedSequence,
-                showPhotoPicker: $viewModel.showPhotoPicker
+                showPhotoPicker: $viewModel.showPhotoPicker,
+                isPlaying: $viewModel.isPlaying
             )
             // Vista de configuración
             if let currentSequence {
@@ -141,3 +144,4 @@ struct ProjectView: View {
         ProjectView(project: .mock, exporter: .init())
     }
 }
+
