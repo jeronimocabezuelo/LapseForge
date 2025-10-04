@@ -73,19 +73,14 @@ struct SequenceCatalogView: View {
         HStack {
             Text(.SequenceCatalog.selectedCaptures(selectedCaptures) )
             Spacer()
-            if selectedCaptures == captures.count {
-                Button(.SequenceCatalog.unselectAll) {
-                    captures.indices.forEach {
-                        captures[at: $0]?.selected = false
-                    }
+            let isAllSelected = selectedCaptures == captures.count
+            Button(isAllSelected ? .SequenceCatalog.unselectAll : .SequenceCatalog.selectAll) {
+                captures.indices.forEach {
+                    captures[at: $0]?.selected = !isAllSelected
                 }
-            } else {
-                Button(.SequenceCatalog.selectAll) {
-                    captures.indices.forEach {
-                        captures[at: $0]?.selected = true
-                    }
-                }
+                
             }
+            .buttonStyle(.glass)
         }
     }
     
@@ -139,13 +134,13 @@ struct SequenceCatalogView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(.Common.close) {
+                    Button(.Common.close, systemImage: "xmark") {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(.Common.save) {
+                    Button(.Common.save, systemImage: "checkmark") {
                         onSaveSequence()
                         dismiss()
                     }

@@ -9,10 +9,12 @@ import SwiftUI
 
 struct TimeLineView: View {
     @State private var scrollContentHeight: CGFloat = 0
+    @State private var timelineWidth: CGFloat = 0
     @State private var alertModel: AlertModel?
+    @State private var showConfirmationDialog: Bool = false
     @State private var position = ScrollPosition(edge: .top)
     let project: LapseProject
-    @Binding var scrubber: TimeInterval?
+    @Binding var scrubber: TimeInterval
     @Binding var selectedSequence: LapseSequence?
     @Binding var showPhotoPicker: Bool
     
@@ -20,14 +22,14 @@ struct TimeLineView: View {
     let imageWidth = 20
     
     private var pixelsPerSecond: CGFloat {
-        UIScreen.main.bounds.width / 45
+        timelineWidth / 45
     }
     
     @ViewBuilder
     var timeMarkers: some View {
         let markerInterval: TimeInterval = 15.0
         let totalDuration = project.totalDuration
-        let horizontalInset: CGFloat = UIScreen.main.bounds.width/2
+        let horizontalInset: CGFloat = timelineWidth/2
         HStack(alignment: .center, spacing: 0) {
             Spacer().frame(width: horizontalInset, height: 10)
             ForEach(0..<Int(totalDuration / markerInterval) + 1, id: \.self) { index in
@@ -61,7 +63,8 @@ struct TimeLineView: View {
             project: project,
             selectedSequence: $selectedSequence,
             pixelsPerSecond: pixelsPerSecond,
-            imageWidth: imageWidth
+            imageWidth: imageWidth,
+            timelineWidth: timelineWidth
         )
     }
     
@@ -83,6 +86,19 @@ struct TimeLineView: View {
     }
     
     @ViewBuilder
+    private var widthReader: some View {
+        GeometryReader { geo in
+            Color.clear
+                .onAppear {
+                    timelineWidth = geo.size.width
+                }
+                .onChange(of: geo.size.width) { _, newWidth in
+                    timelineWidth = newWidth
+                }
+        }
+    }
+    
+    @ViewBuilder
     var scrubberLine: some View {
         HStack {
             Spacer()
@@ -96,47 +112,32 @@ struct TimeLineView: View {
     @ViewBuilder
     var addSequenceButton: some View {
         Button(
+            .Project.newSequenceAlertTitle,
+            systemImage: "plus",
             action: {
-                let cameraButton = AlertButton(
-                    title: .Project.camera,
-                    action: {
-                        selectedSequence = .init()
-                    }
-                )
-                
-                let galeryButton = AlertButton(
-                    title: .Project.galery,
-                    action: {
-                        showPhotoPicker = true
-                    }
-                )
-                alertModel = .init(
-                    title: .Project.newSequenceAlertTitle,
-                    message: .Project.newSequenceAlertMessage,
-                    buttons: [
-                        cameraButton,
-                        galeryButton,
-                        .cancel()
-                    ]
-                )
-            },
-            label: {
-                Image(systemName: "plus.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: max(scrollContentHeight - 32, 20))
+                showConfirmationDialog = true
             }
         )
-        .padding(.horizontal)
-        .background(
-            .ultraThinMaterial
-        )
-        .clipShape(.circle)
-        .shadow(
-            color: .black.opacity(0.8),
-            radius: 2,
-            x: 1,
-            y: 1
+        .font(.title)
+        .labelStyle(.iconOnly)
+        .controlSize(.extraLarge)
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .padding(.horizontal, 14)
+        .confirmationDialog(
+            .Project.newSequenceAlertTitle,
+            isPresented: $showConfirmationDialog,
+            actions: {
+                Button(.Project.camera) {
+                    selectedSequence = .init()
+                }
+                Button(.Project.galery) {
+                    showPhotoPicker = true
+                }
+            },
+            message: {
+                Text(.Project.newSequenceAlertMessage)
+            }
         )
     }
     
@@ -153,6 +154,9 @@ struct TimeLineView: View {
                 backgroundReader
             }
         }
+        .background {
+            widthReader
+        }
         .scrollPosition($position)
         .coordinateSpace(scrollCoordinateSpace)
         .overlay {
@@ -162,7 +166,7 @@ struct TimeLineView: View {
             addSequenceButton
         }
         .alert(model: $alertModel)
-        .onChange(of: scrubber ?? .zero) { _, newValue in
+        .onChange(of: scrubber) { _, newValue in
             position.scrollTo(x: newValue * pixelsPerSecond)
         }
     }
@@ -178,9 +182,10 @@ struct SequencesView: View {
     @Binding var selectedSequence: LapseSequence?
     let pixelsPerSecond: CGFloat
     let imageWidth: Int
+    let timelineWidth: CGFloat
     
     var body: some View {
-        let horizontalInset: CGFloat = UIScreen.main.bounds.width/2
+        let horizontalInset: CGFloat = timelineWidth/2
         HStack(alignment: .top, spacing: 0) {
             Spacer().frame(width: horizontalInset, height: 10)
             ForEach(project.sequences) { sequence in

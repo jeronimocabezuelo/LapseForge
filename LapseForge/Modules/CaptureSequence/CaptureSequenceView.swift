@@ -158,10 +158,11 @@ struct CaptureSequenceView: View {
                         }
                     }
                 }, label: {
-                    Image(systemName: isRecording ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(isRecording ? .red : .green)
+                    Image(systemName: isRecording ? "pause.fill" : "play.fill")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                        .padding()
+                        .glassEffect(.regular.tint(isRecording ? .red : .green).interactive())
                 })
                 
                 Text(.CaptureSequence.captures(session.sequence.count))
@@ -183,13 +184,13 @@ struct CaptureSequenceView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(.Common.close) {
+                    Button(.Common.close, systemImage: "xmark") {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(.Common.save) {
+                    Button(.Common.save, systemImage: "checkmark") {
                         onSaveSequence?(session.sequence)
                         dismiss()
                     }
@@ -298,5 +299,11 @@ extension CaptureSequenceSession: AVCapturePhotoCaptureDelegate {
         } catch {
             print("❌ Error al guardar la imagen: \(error.localizedDescription)")
         }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        CaptureSequenceView(sequence: .mock)
     }
 }

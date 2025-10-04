@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PreviewView: View {
     var project: LapseProject
-    @Binding var scrubber: TimeInterval?
+    @Binding var scrubber: TimeInterval
     
     @State private var isPlaying = false
     @State private var playbackTask: Task<Void, Never>?
@@ -17,8 +17,7 @@ struct PreviewView: View {
     var body: some View {
         Color.gray
             .overlay {
-                if let scrubber,
-                   let (sequence, index) = project.sequenceAndIndex(at: scrubber),
+                if let (sequence, index) = project.sequenceAndIndex(at: scrubber),
                    let capture = sequence.capture(at: index) {
                     CaptureView(
                         capture: capture,
@@ -33,26 +32,14 @@ struct PreviewView: View {
             .overlay(alignment: .bottom) {
                 HStack {
                     HStack {
-                        Button(
-                            action: {
-                                togglePlayback()
-                            },
-                            label: {
-                                Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 24, height: 24)
-                                    .shadow(
-                                        color: .black.opacity(0.8),
-                                        radius: 2,
-                                        x: 1,
-                                        y: 1
-                                    )
-                            }
-                        )
+                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                            .font(.title)
+                            .padding()
+                            .onTapGesture(perform: togglePlayback)
+                            .glassEffect(.regular.interactive())
                         Spacer(minLength: .zero)
                     }
-                    Text(.Project.timeScrubber((scrubber ?? .zero).timeString, project.totalDuration.timeString))
+                    Text(.Project.timeScrubber(scrubber.timeString, project.totalDuration.timeString))
                         .shadow(
                             color: .white.opacity(0.8),
                             radius: 2,
@@ -79,22 +66,18 @@ struct PreviewView: View {
     
     private func startPlayback() {
         isPlaying = true
-        playbackTask = Task {
-            let start = scrubber ?? .zero
+        playbackTask = Task { @MainActor in
+            let start = scrubber
             let startTime = Date()
             while !Task.isCancelled {
                 let elapsed = Date().timeIntervalSince(startTime)
                 let newValue = start + elapsed
                 if newValue >= project.totalDuration {
-                    DispatchQueue.main.async {
-                        scrubber = project.totalDuration
-                    }
+                    scrubber = project.totalDuration
                     stopPlayback()
                     break
                 } else {
-                    DispatchQueue.main.async {
-                        scrubber = newValue
-                    }
+                    scrubber = newValue
                 }
                 try? await Task.sleep(for: .milliseconds(33))
             }
