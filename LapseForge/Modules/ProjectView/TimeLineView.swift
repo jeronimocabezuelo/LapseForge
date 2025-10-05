@@ -115,32 +115,29 @@ struct TimeLineView: View {
     
     @ViewBuilder
     var addSequenceButton: some View {
-        Button(action: {
-            showConfirmationDialog = true
-        }, label: {
-            Image(systemName: "plus")
-                .font(.title)
-                .padding()
-                .squareByIntrinsic()
-                .glassEffect(.regular.interactive())
-        })
-        .buttonStyle(.plain)
-        .padding(.horizontal, 14)
-        .confirmationDialog(
-            .Project.newSequenceAlertTitle,
-            isPresented: $showConfirmationDialog,
-            actions: {
-                Button(.Project.camera) {
-                    selectedSequence = .init()
-                }
-                Button(.Project.galery) {
-                    showPhotoPicker = true
-                }
+        ExpandableGlassMenu(
+            label: {
+                Image(systemName: "plus")
+                    .font(.title)
+                    .squareByIntrinsic()
+                    .padding()
             },
-            message: {
-                Text(.Project.newSequenceAlertMessage)
+            content: {
+                VStack {
+                    Text(.Project.newSequenceAlertTitle)
+                    
+                    Button(.Project.camera) {
+                        selectedSequence = .init()
+                    }
+                    Button(.Project.galery) {
+                        showPhotoPicker = true
+                    }
+                }
+                .padding()
+                .buttonStyle(.bordered)
             }
         )
+        .padding(.horizontal, 14)
     }
     
     var body: some View {
