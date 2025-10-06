@@ -94,7 +94,7 @@ struct CaptureSequenceView: View {
     var nextCaptureCountdown: TimeInterval {
         let result = Date().distance(to: nextCapture)
         
-        print("Next capture countdown: \(result)")
+//        print("Next capture countdown: \(result)")
         
         return result
     }
