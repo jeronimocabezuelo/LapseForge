@@ -123,18 +123,10 @@ struct TimeLineView: View {
                     .padding()
             },
             content: {
-                VStack {
-                    Text(.Project.newSequenceAlertTitle)
-                    
-                    Button(.Project.camera) {
-                        selectedSequence = .init()
-                    }
-                    Button(.Project.galery) {
-                        showPhotoPicker = true
-                    }
-                }
-                .padding()
-                .buttonStyle(.bordered)
+                AddingSelector(
+                    selectedSequence: $selectedSequence,
+                    showPhotoPicker: $showPhotoPicker
+                )
             }
         )
         .padding(.horizontal, 14)
@@ -178,6 +170,30 @@ struct TimeLineView: View {
         let newScrubber = max(min(-offset / pixelsPerSecond, project.totalDuration), .zero)
         if abs(scrubber - newScrubber) <= 0.001 { return }
         scrubber = newScrubber
+    }
+}
+
+private struct AddingSelector: View {
+    @Binding var selectedSequence: LapseSequence?
+    @Binding var showPhotoPicker: Bool
+    
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        VStack {
+            Text(.Project.newSequenceAlertTitle)
+            
+            Button(.Project.camera) {
+                dismiss()
+                selectedSequence = .init()
+            }
+            Button(.Project.galery) {
+                dismiss()
+                showPhotoPicker = true
+            }
+            .buttonStyle(.glassProminent)
+        }
+        .padding()
+        .frame(width: 200, height: 200)
     }
 }
 

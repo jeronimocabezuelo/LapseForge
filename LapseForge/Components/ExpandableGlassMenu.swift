@@ -7,88 +7,105 @@
 
 import SwiftUI
 
-struct ExpandableGlassMenu<Content: View, Label: View>: View {
-    var cornerRadius: CGFloat = 30
-    var animation: Animation = .bouncy(duration: 0.5, extraBounce: 0.02)
+/// ExpandableGlassMenu
+///
+/// Error conocido: el efecto glass queda cortado, eliminar el ``matchedTransitionSource(id: "ExpandableGlassMenu", in: namespace)`` soluciona el problema, pero se pierde la animación de zoom desde el propio botón. Aunque hemos seguido este tutorial [iOS 26 Custom Menu Using SwiftUI | Xcode 26](https://www.youtube.com/watch?v=RwPsJhrPP9g) y a el no le ocurría. Puede ser un error de la RC de Xcode (versión con la que se ha compilado)
+struct ExpandableGlassMenu<Label: View, Content: View>: View {
+    var isHapticEnabled: Bool = true
     @ViewBuilder var label: Label
     @ViewBuilder var content: Content
     
-    @State private var progress: CGFloat = .zero
-    @State private var labelSize: CGSize = .zero
-    @State private var contentSize: CGSize = .zero
+    @State private var haptics: Bool = false
+    @State private var isExpanded: Bool = false
     
-    var labelOpacity: CGFloat {
-        min(progress/0.35, 1)
-    }
-    
-    var contentOpacity: CGFloat {
-        max(0, progress - 0.35) / 0.65
-    }
-    
-    var contentScale: CGFloat {
-        let minAspectScale = min(labelSize.width / contentSize.width, labelSize.height / contentSize.height)
-        return minAspectScale + (1 - minAspectScale) * progress
-    }
-    
-    var blurProgress: CGFloat {
-        progress > 0.5 ? (1 - progress) / 0.5 : progress / 0.5
-    }
+    @Namespace var namespace
     
     var body: some View {
-        GlassEffectContainer {
-            let widthDiff = contentSize.width - labelSize.width
-            let heightDiff = contentSize.height - labelSize.height
-            
-            let rWidth = widthDiff * contentOpacity
-            let rHeight = heightDiff * contentOpacity
-            
-            ZStack {
-                content
-                    .compositingGroup()
-                    .scaleEffect(contentScale)
-                    .blur(radius: 14 * blurProgress)
-                    .opacity(contentOpacity)
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { contentSize = $0 }
-                    )
-                    .fixedSize()
-                    .frame(
-                        width: labelSize.width + rWidth,
-                        height: labelSize.height + rHeight
-                    )
-                label
-                    .contentShape(.rect)
-                    .compositingGroup()
-                    .blur(radius: 14 * blurProgress)
-                    .opacity(1 - labelOpacity)
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { labelSize = $0 }
-                    )
-                    .fixedSize()
-                    .frame(width: labelSize.width, height: labelSize.height)
-                    .onTapGesture {
-                        withAnimation(animation) {
-                            progress = 1
-                        }
+            label
+                
+                .onTapGesture {
+                    if isHapticEnabled {
+                        haptics.toggle()
                     }
-                    .contentShape(.rect)
-                    .allowsHitTesting(progress == 0)
-            }
-            .compositingGroup()
-            .clipShape(.rect(cornerRadius: cornerRadius))
-            .glassEffect(
-                .regular.interactive(progress == 0),
-                in: .rect(cornerRadius: cornerRadius)
-            )
+                    
+                    isExpanded.toggle()
+                }
+                .contentShape(.rect)
+                .glassEffect(.regular.interactive(), in: .circle)
+                .matchedTransitionSource(id: "ExpandableGlassMenu", in: namespace)
+                .popover(
+                    isPresented: $isExpanded,
+                    content: {
+                        PopoverHelper {
+                            content
+                        }
+                        .glassEffectUnion(id: "ExpandableGlassMenu", namespace: namespace)
+                        .navigationTransition(.zoom(sourceID: "ExpandableGlassMenu", in: namespace))
+                    }
+                )
+                .sensoryFeedback(.selection, trigger: haptics)
         }
-        .onTapOutside {
-            withAnimation(animation) {
-                progress = 0
+}
+
+private struct PopoverHelper<Content: View>: View {
+    @ViewBuilder var content: Content
+    @State private var isVisible: Bool = false
+    
+    var body: some View {
+        content
+            .opacity(isVisible ? 1 : 0)
+            .task {
+                try? await Task.sleep(for: .seconds(0.1))
+                withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
+                    isVisible = true
+                }
+            }
+            .presentationCompactAdaptation(.popover)
+    }
+}
+
+#Preview {
+    ScrollView(.vertical) {
+        VStack(spacing: 25) {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(.gray.opacity(0.2))
+                .frame(height: 220)
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Title")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                    Text("Description")
+                        .font(.caption)
+                        .foregroundStyle(.gray)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                ExpandableGlassMenu(
+                    label: {
+                        Image(systemName: "chevron.right")
+                            .font(.title3)
+                            
+                    },
+                    content: {
+                        VStack {
+                            Text(.Project.newSequenceAlertTitle)
+                            
+                            Button(.Project.camera) {
+                                print("camera")
+                            }
+                            Button(.Project.galery) {
+                                print("galery")
+                            }
+                        }
+                        .padding()
+                        .buttonStyle(.bordered)
+                    }
+                )
             }
         }
+        .padding(15)
+        .padding(.bottom, 700)
     }
 }
