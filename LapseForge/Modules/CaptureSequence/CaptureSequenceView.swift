@@ -202,6 +202,7 @@ struct CaptureSequenceView: View {
                     takePhoto()
                 }
             }
+            .idleTimerDisabled(isRecording)
         }
     }
     

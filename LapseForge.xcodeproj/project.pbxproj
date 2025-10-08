@@ -27,6 +27,7 @@
 		74BD69672E477F9D00532A24 /* IntPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD69662E477F9D00532A24 /* IntPicker.swift */; };
 		74BD69692E477FB700532A24 /* TimeIntervalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */; };
 		74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD696A2E47A78E00532A24 /* Array+Extension.swift */; };
+		74C8BA5D2E96CC2800979C0B /* IdleTimerDisabled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */; };
 		74D769702E8805AE0076BCD4 /* DisplayedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */; };
 		74D769742E9136750076BCD4 /* SquareByIntrinsic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */; };
 		74D769782E92921A0076BCD4 /* ExpandableGlassMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */; };
@@ -67,6 +68,7 @@
 		74BD69662E477F9D00532A24 /* IntPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntPicker.swift; sourceTree = "<group>"; };
 		74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalPicker.swift; sourceTree = "<group>"; };
 		74BD696A2E47A78E00532A24 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleTimerDisabled.swift; sourceTree = "<group>"; };
 		74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayedTextView.swift; sourceTree = "<group>"; };
 		74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareByIntrinsic.swift; sourceTree = "<group>"; };
 		74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableGlassMenu.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 		74BD69652E477F8C00532A24 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */,
 				74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */,
 				74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */,
 				74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */,
@@ -342,6 +345,7 @@
 				7448D63D2E3FD15600D0CB5C /* LapseForgeApp.swift in Sources */,
 				741AF83A2E4B4B5D009ACEFA /* SequenceCatalogView.swift in Sources */,
 				74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */,
+				74C8BA5D2E96CC2800979C0B /* IdleTimerDisabled.swift in Sources */,
 				74BD69642E475E3100532A24 /* PreviewView.swift in Sources */,
 				74BD69672E477F9D00532A24 /* IntPicker.swift in Sources */,
 				7448D6412E3FD17600D0CB5C /* Utils.swift in Sources */,
