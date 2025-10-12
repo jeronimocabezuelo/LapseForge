@@ -28,6 +28,7 @@
 		74BD69692E477FB700532A24 /* TimeIntervalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */; };
 		74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD696A2E47A78E00532A24 /* Array+Extension.swift */; };
 		74C8BA5D2E96CC2800979C0B /* IdleTimerDisabled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */; };
+		74C8BA652E9BC3E000979C0B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74C8BA642E9BC3E000979C0B /* Launch Screen.storyboard */; };
 		74D769702E8805AE0076BCD4 /* DisplayedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */; };
 		74D769742E9136750076BCD4 /* SquareByIntrinsic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */; };
 		74D769782E92921A0076BCD4 /* ExpandableGlassMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */; };
@@ -69,6 +70,7 @@
 		74BD69682E477FB700532A24 /* TimeIntervalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalPicker.swift; sourceTree = "<group>"; };
 		74BD696A2E47A78E00532A24 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleTimerDisabled.swift; sourceTree = "<group>"; };
+		74C8BA642E9BC3E000979C0B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayedTextView.swift; sourceTree = "<group>"; };
 		74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareByIntrinsic.swift; sourceTree = "<group>"; };
 		74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableGlassMenu.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				74BD69652E477F8C00532A24 /* Components */,
 				74BD69602E46587800532A24 /* Extension */,
 				7448D63F2E3FD16D00D0CB5C /* Utils */,
+				74C8BA632E9BC3BE00979C0B /* Launch */,
 				7448D6552E3FD3B200D0CB5C /* Models */,
 				7448D6562E3FD3BD00D0CB5C /* Modules */,
 				7448D6352E3FD15600D0CB5C /* Assets.xcassets */,
@@ -210,6 +213,14 @@
 				741AF8372E4B49B4009ACEFA /* CaptureView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		74C8BA632E9BC3BE00979C0B /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				74C8BA642E9BC3E000979C0B /* Launch Screen.storyboard */,
+			);
+			path = Launch;
 			sourceTree = "<group>";
 		};
 		74F377E32E75C99E00AB1A72 /* CaptureSequence */ = {
@@ -320,6 +331,7 @@
 				74F377E52E75C9BD00AB1A72 /* CaptureSequence.xcstrings in Resources */,
 				74F377F02E75D25500AB1A72 /* SequenceCatalog.xcstrings in Resources */,
 				74F377ED2E75D12400AB1A72 /* ProjectsList.xcstrings in Resources */,
+				74C8BA652E9BC3E000979C0B /* Launch Screen.storyboard in Resources */,
 				74F377D92E7333BC00AB1A72 /* icon.icon in Resources */,
 				7448D63E2E3FD15600D0CB5C /* Assets.xcassets in Resources */,
 				74F377E22E75C8B900AB1A72 /* Common.xcstrings in Resources */,
@@ -501,6 +513,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = icon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = LapseForge/LapseForge.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -524,6 +537,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
@@ -554,6 +568,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = icon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = LapseForge/LapseForge.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -577,6 +592,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
