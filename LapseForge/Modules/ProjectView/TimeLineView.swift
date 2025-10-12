@@ -186,6 +186,7 @@ private struct AddingSelector: View {
                 dismiss()
                 selectedSequence = .init()
             }
+            .buttonStyle(.glassProminent)
             Button(.Project.galery) {
                 dismiss()
                 showPhotoPicker = true
