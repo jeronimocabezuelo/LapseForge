@@ -29,6 +29,12 @@ Por ahora, LapseForge no está disponible en la App Store. Próximamente aquí s
 
 ### Versión 1.1
 - [ ] Mejoras de interfaz y experiencia de usuario
+  - Selector de resolución
+  - Zoom
+  - Flash
+  - Apagar pantalla durante la captura
+  - Soporte dirección al capturar
+  - Onion Skin
 - [ ] Gestión desde Apple Watch: iniciar/detener capturas remotamente
 
 ### Versión 1.2
