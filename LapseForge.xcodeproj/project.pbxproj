@@ -11,6 +11,14 @@
 		741AF8352E490089009ACEFA /* CustomFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8342E490082009ACEFA /* CustomFileManager.swift */; };
 		741AF8382E4B49B4009ACEFA /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8372E4B49B4009ACEFA /* CaptureView.swift */; };
 		741AF83A2E4B4B5D009ACEFA /* SequenceCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8392E4B4B5D009ACEFA /* SequenceCatalogView.swift */; };
+		744330A12E9D09B2005B12B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7443309D2E9D09B2005B12B1 /* Assets.xcassets */; };
+		744330A22E9D09B2005B12B1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309E2E9D09B2005B12B1 /* ContentView.swift */; };
+		744330A32E9D09B2005B12B1 /* LapseForgeWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */; };
+		744330A42E9D09C0005B12B1 /* icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 74F377D82E7333BC00AB1A72 /* icon.icon */; };
+		744330A72E9D0B58005B12B1 /* PhoneConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */; };
+		744330AA2E9D0C5D005B12B1 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */; };
+		744330AC2E9D144E005B12B1 /* CaptureSequenceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */; };
+		744330AE2E9D146E005B12B1 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AD2E9D146E005B12B1 /* CameraPreview.swift */; };
 		7448D6332E3FD14500D0CB5C /* ci_post_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7448D6312E3FD14500D0CB5C /* ci_post_xcodebuild.sh */; };
 		7448D6342E3FD14500D0CB5C /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7448D6302E3FD14500D0CB5C /* ci_post_clone.sh */; };
 		7448D63D2E3FD15600D0CB5C /* LapseForgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7448D6392E3FD15600D0CB5C /* LapseForgeApp.swift */; };
@@ -29,6 +37,7 @@
 		74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD696A2E47A78E00532A24 /* Array+Extension.swift */; };
 		74C8BA5D2E96CC2800979C0B /* IdleTimerDisabled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */; };
 		74C8BA652E9BC3E000979C0B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74C8BA642E9BC3E000979C0B /* Launch Screen.storyboard */; };
+		74C8BA742E9C099000979C0B /* LapseForgeWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 74C8BA6A2E9C098F00979C0B /* LapseForgeWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		74D769702E8805AE0076BCD4 /* DisplayedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */; };
 		74D769742E9136750076BCD4 /* SquareByIntrinsic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */; };
 		74D769782E92921A0076BCD4 /* ExpandableGlassMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */; };
@@ -45,11 +54,42 @@
 		74F377F02E75D25500AB1A72 /* SequenceCatalog.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 74F377EF2E75D25500AB1A72 /* SequenceCatalog.xcstrings */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		74C8BA722E9C099000979C0B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7448D6082E3FCBC100D0CB5C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 74C8BA692E9C098F00979C0B;
+			remoteInfo = "LapseForgeWatch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		74C8BA782E9C099000979C0B /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				74C8BA742E9C099000979C0B /* LapseForgeWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		741AF8322E48C0FA009ACEFA /* ConfigurationSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationSequenceView.swift; sourceTree = "<group>"; };
 		741AF8342E490082009ACEFA /* CustomFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFileManager.swift; sourceTree = "<group>"; };
 		741AF8372E4B49B4009ACEFA /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		741AF8392E4B4B5D009ACEFA /* SequenceCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceCatalogView.swift; sourceTree = "<group>"; };
+		7443309D2E9D09B2005B12B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7443309E2E9D09B2005B12B1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapseForgeWatchApp.swift; sourceTree = "<group>"; };
+		744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneConnectivityManager.swift; sourceTree = "<group>"; };
+		744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSequenceSession.swift; sourceTree = "<group>"; };
+		744330AD2E9D146E005B12B1 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		7448D6102E3FCBC100D0CB5C /* LapseForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LapseForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7448D6302E3FD14500D0CB5C /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		7448D6312E3FD14500D0CB5C /* ci_post_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh; sourceTree = "<group>"; };
@@ -71,6 +111,7 @@
 		74BD696A2E47A78E00532A24 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		74C8BA5C2E96CC2800979C0B /* IdleTimerDisabled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleTimerDisabled.swift; sourceTree = "<group>"; };
 		74C8BA642E9BC3E000979C0B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		74C8BA6A2E9C098F00979C0B /* LapseForgeWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LapseForgeWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		74D7696F2E8805AE0076BCD4 /* DisplayedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayedTextView.swift; sourceTree = "<group>"; };
 		74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareByIntrinsic.swift; sourceTree = "<group>"; };
 		74D769772E92921A0076BCD4 /* ExpandableGlassMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableGlassMenu.swift; sourceTree = "<group>"; };
@@ -97,9 +138,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		74C8BA672E9C098F00979C0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		744330A02E9D09B2005B12B1 /* LapseForgeWatch Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				7443309D2E9D09B2005B12B1 /* Assets.xcassets */,
+				7443309E2E9D09B2005B12B1 /* ContentView.swift */,
+				7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */,
+			);
+			path = "LapseForgeWatch Watch App";
+			sourceTree = "<group>";
+		};
+		744330A52E9D0B53005B12B1 /* ConnectivityManager */ = {
+			isa = PBXGroup;
+			children = (
+				744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */,
+				744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */,
+			);
+			path = ConnectivityManager;
+			sourceTree = "<group>";
+		};
 		7448D6072E3FCBC100D0CB5C = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +174,7 @@
 				74F377DA2E7583F000AB1A72 /* README.md */,
 				7448D6322E3FD14500D0CB5C /* ci_scripts */,
 				7448D63A2E3FD15600D0CB5C /* LapseForge */,
+				744330A02E9D09B2005B12B1 /* LapseForgeWatch Watch App */,
 				7448D6112E3FCBC100D0CB5C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -115,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				7448D6102E3FCBC100D0CB5C /* LapseForge.app */,
+				74C8BA6A2E9C098F00979C0B /* LapseForgeWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,6 +219,7 @@
 		7448D63F2E3FD16D00D0CB5C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				744330A52E9D0B53005B12B1 /* ConnectivityManager */,
 				741AF8342E490082009ACEFA /* CustomFileManager.swift */,
 				7448D6402E3FD17600D0CB5C /* Utils.swift */,
 			);
@@ -226,7 +296,9 @@
 		74F377E32E75C99E00AB1A72 /* CaptureSequence */ = {
 			isa = PBXGroup;
 			children = (
+				744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */,
 				74BD695B2E43CFD300532A24 /* CaptureSequenceView.swift */,
+				744330AD2E9D146E005B12B1 /* CameraPreview.swift */,
 				74F377E42E75C9BD00AB1A72 /* CaptureSequence.xcstrings */,
 			);
 			path = CaptureSequence;
@@ -269,17 +341,38 @@
 				7448D60C2E3FCBC100D0CB5C /* Sources */,
 				7448D60D2E3FCBC100D0CB5C /* Frameworks */,
 				7448D60E2E3FCBC100D0CB5C /* Resources */,
+				74C8BA782E9C099000979C0B /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				7448D62F2E3FD07700D0CB5C /* PBXTargetDependency */,
+				74C8BA732E9C099000979C0B /* PBXTargetDependency */,
 			);
 			name = LapseForge;
 			packageProductDependencies = (
 			);
 			productName = LapseForge;
 			productReference = 7448D6102E3FCBC100D0CB5C /* LapseForge.app */;
+			productType = "com.apple.product-type.application";
+		};
+		74C8BA692E9C098F00979C0B /* LapseForgeWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 74C8BA752E9C099000979C0B /* Build configuration list for PBXNativeTarget "LapseForgeWatch Watch App" */;
+			buildPhases = (
+				74C8BA662E9C098F00979C0B /* Sources */,
+				74C8BA672E9C098F00979C0B /* Frameworks */,
+				74C8BA682E9C098F00979C0B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "LapseForgeWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "LapseForgeWatch Watch App";
+			productReference = 74C8BA6A2E9C098F00979C0B /* LapseForgeWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -289,11 +382,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					7448D60F2E3FCBC100D0CB5C = {
 						CreatedOnToolsVersion = 16.3;
+					};
+					74C8BA692E9C098F00979C0B = {
+						CreatedOnToolsVersion = 26.0;
 					};
 				};
 			};
@@ -316,6 +412,7 @@
 			projectRoot = "";
 			targets = (
 				7448D60F2E3FCBC100D0CB5C /* LapseForge */,
+				74C8BA692E9C098F00979C0B /* LapseForgeWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -336,6 +433,15 @@
 				7448D63E2E3FD15600D0CB5C /* Assets.xcassets in Resources */,
 				74F377E22E75C8B900AB1A72 /* Common.xcstrings in Resources */,
 				7448D6342E3FD14500D0CB5C /* ci_post_clone.sh in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74C8BA682E9C098F00979C0B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				744330A12E9D09B2005B12B1 /* Assets.xcassets in Resources */,
+				744330A42E9D09C0005B12B1 /* icon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,7 +467,10 @@
 				74BD69642E475E3100532A24 /* PreviewView.swift in Sources */,
 				74BD69672E477F9D00532A24 /* IntPicker.swift in Sources */,
 				7448D6412E3FD17600D0CB5C /* Utils.swift in Sources */,
+				744330A72E9D0B58005B12B1 /* PhoneConnectivityManager.swift in Sources */,
 				74BD695A2E43CB5200532A24 /* ProjectView.swift in Sources */,
+				744330AE2E9D146E005B12B1 /* CameraPreview.swift in Sources */,
+				744330AC2E9D144E005B12B1 /* CaptureSequenceSession.swift in Sources */,
 				74D769742E9136750076BCD4 /* SquareByIntrinsic.swift in Sources */,
 				7448D6632E41185900D0CB5C /* ProjectsListView.swift in Sources */,
 				74BD69622E46588700532A24 /* TimeInterval+Extension.swift in Sources */,
@@ -374,12 +483,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		74C8BA662E9C098F00979C0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				744330A22E9D09B2005B12B1 /* ContentView.swift in Sources */,
+				744330AA2E9D0C5D005B12B1 /* WatchConnectivityManager.swift in Sources */,
+				744330A32E9D09B2005B12B1 /* LapseForgeWatchApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		7448D62F2E3FD07700D0CB5C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 7448D62E2E3FD07700D0CB5C /* SwiftLintBuildToolPlugin */;
+		};
+		74C8BA732E9C099000979C0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 74C8BA692E9C098F00979C0B /* LapseForgeWatch Watch App */;
+			targetProxy = 74C8BA722E9C099000979C0B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -618,6 +742,75 @@
 			};
 			name = Release;
 		};
+		74C8BA762E9C099000979C0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = icon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = LapseForgeWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.jeronimoCabezuelo.LapseForge;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeronimoCabezuelo.LapseForge.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		74C8BA772E9C099000979C0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = icon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = LapseForgeWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.jeronimoCabezuelo.LapseForge;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeronimoCabezuelo.LapseForge.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -635,6 +828,15 @@
 			buildConfigurations = (
 				7448D61F2E3FCBC200D0CB5C /* Debug */,
 				7448D6202E3FCBC200D0CB5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		74C8BA752E9C099000979C0B /* Build configuration list for PBXNativeTarget "LapseForgeWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74C8BA762E9C099000979C0B /* Debug */,
+				74C8BA772E9C099000979C0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
