@@ -69,6 +69,23 @@
         }
       }
     },
+    "elapsedTimeShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elapsed: %1$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración: %1$@"
+          }
+        }
+      }
+    },
     "front" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -133,6 +150,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Próxima captura en: %1$@"
+          }
+        }
+      }
+    },
+    "noState" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No state"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin estado"
+          }
+        }
+      }
+    },
+    "noStateDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a sequence on iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre una secuencia en el iPhone"
           }
         }
       }

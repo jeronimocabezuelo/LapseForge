@@ -14,6 +14,7 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
     static let shared = WatchConnectivityManager()
     
     @Published private(set) var lastReceivedPayload: [String: Any] = [:]
+    @Published private(set) var lastState: RecordingState?
     let lastReceivedPayloadSubject = PassthroughSubject<[String: Any], Never>()
     
     var isReachable: Bool {
@@ -21,7 +22,6 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
     }
     
     private var activated = false
-    private let loggingEnabled = true
     
     private override init() {
         super.init()
@@ -71,6 +71,8 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
             self?.lastReceivedPayload = message
             self?.lastReceivedPayloadSubject.send(message)
         }
+        handleStatePayloadIfNeeded(message)
+        handleResetIfNeeded(message)
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
@@ -81,11 +83,46 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
             self?.lastReceivedPayload = applicationContext
             self?.lastReceivedPayloadSubject.send(applicationContext)
         }
+        handleStatePayloadIfNeeded(applicationContext)
+        handleResetIfNeeded(applicationContext)
     }
     
-    // MARK: - Sending
+    // MARK: - State Handling (iPhone -> Watch)
+    private func handleStatePayloadIfNeeded(_ dict: [String: Any]) {
+        guard let type = dict["type"] as? String, type == "state" else { return }
+        guard let data = dict["payload"] as? Data else { return }
+        do {
+            let decoded = try JSONDecoder().decode(RecordingState.self, from: data)
+            if loggingEnabled {
+                print("[WatchConnectivityManager] Decoded RecordingState: \(decoded)")
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.lastState = decoded
+            }
+        } catch {
+            if loggingEnabled {
+                print("[WatchConnectivityManager] Failed to decode RecordingState: \(error.localizedDescription)")
+            }
+        }
+    }
     
-    func send(message: [String: Any], reply: (([String: Any]) -> Void)? = nil, error: ((Error) -> Void)? = nil) {
+    private func handleResetIfNeeded(_ dict: [String: Any]) {
+        guard let type = dict["type"] as? String, type == "reset" else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.lastState = nil
+        }
+        if loggingEnabled {
+            print("[WatchConnectivityManager] Received reset, clearing lastState.")
+        }
+    }
+
+    
+    // MARK: - Sending
+    func send(
+        message: [String: Any],
+        reply: (([String: Any]) -> Void)? = nil,
+        error: ((Error) -> Void)? = nil
+    ) {
         guard isReachable else {
             if loggingEnabled {
                 print("[WatchConnectivityManager] Cannot send message, phone not reachable.")
@@ -96,7 +133,7 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
         }
         
         WCSession.default.sendMessage(message, replyHandler: reply, errorHandler: { sendError in
-            if self.loggingEnabled {
+            if loggingEnabled {
                 print("[WatchConnectivityManager] Error sending message: \(sendError.localizedDescription)")
             }
             error?(sendError)
@@ -114,7 +151,9 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
         try WCSession.default.updateApplicationContext(context)
     }
     
-//    func sessionDidBecomeInactive(_ session: WCSession) { }
-//    
-//    func sessionDidDeactivate(_ session: WCSession) { }
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        if loggingEnabled {
+            print("[WatchConnectivityManager] reachability changed: \(session.isReachable)")
+        }
+    }
 }

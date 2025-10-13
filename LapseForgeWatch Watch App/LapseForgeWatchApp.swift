@@ -11,7 +11,7 @@ import SwiftUI
 struct LapseForgeWatch_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WatchView()
                 .task {
                     WatchConnectivityManager.shared.activate()
                 }

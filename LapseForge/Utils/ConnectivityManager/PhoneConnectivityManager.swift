@@ -21,7 +21,6 @@ final class PhoneConnectivityManager: NSObject, WCSessionDelegate {
     }
 
     private var activated = false
-    private let loggingEnabled = true
 
     private override init() {
         super.init()
@@ -59,7 +58,7 @@ final class PhoneConnectivityManager: NSObject, WCSessionDelegate {
             if let error = error {
                 print("[PhoneConnectivityManager] session activationDidCompleteWith error: \(error.localizedDescription)")
             } else {
-                print("[PhoneConnectivityManager] session activationDidCompleteWith state: \(activationState.rawValue)")
+                print("[PhoneConnectivityManager] session activationDidCompleteWith state: \(activationState) - \(activationState.rawValue)")
             }
         }
     }
@@ -100,7 +99,7 @@ final class PhoneConnectivityManager: NSObject, WCSessionDelegate {
         }
 
         WCSession.default.sendMessage(message, replyHandler: reply, errorHandler: { err in
-            if self.loggingEnabled {
+            if loggingEnabled {
                 print("[PhoneConnectivityManager] send(message:) error: \(err.localizedDescription)")
             }
             error?(err)
@@ -122,6 +121,81 @@ final class PhoneConnectivityManager: NSObject, WCSessionDelegate {
                 print("[PhoneConnectivityManager] sendApplicationContext: failed with error: \(error.localizedDescription)")
             }
             throw error
+        }
+    }
+
+    // MARK: - State Snapshot (iPhone -> Watch)
+
+    /// Builds a Foundation-friendly payload dictionary from a RecordingState by encoding it to JSON Data.
+    private func makeStatePayload(from state: RecordingState) -> [String: Any] {
+        do {
+            let data = try JSONEncoder().encode(state)
+            return [
+                "type": "state",
+                "payload": data
+            ]
+        } catch {
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] makeStatePayload encode error: \(error.localizedDescription)")
+            }
+            return [
+                "type": "state",
+                "payload": Data() // empty payload on failure
+            ]
+        }
+    }
+
+    /// Sends a state snapshot to the Watch. If reachable, attempts immediate sendMessage, and always updates application context.
+    func sendStateSnapshot(_ state: RecordingState) {
+        let payload = makeStatePayload(from: state)
+
+        if WCSession.default.isReachable {
+            WCSession.default.sendMessage(payload, replyHandler: nil) { err in
+                if loggingEnabled {
+                    print("[PhoneConnectivityManager] sendStateSnapshot sendMessage error: \(err.localizedDescription)")
+                }
+            }
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] sendStateSnapshot via sendMessage: \(state)")
+            }
+        }
+
+        do {
+            try WCSession.default.updateApplicationContext(payload)
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] sendStateSnapshot updateApplicationContext OK")
+            }
+        } catch {
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] sendStateSnapshot updateApplicationContext error: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    /// Sends a reset control message to clear the Watch UI state.
+    func sendReset() {
+        let payload: [String: Any] = ["type": "reset"]
+
+        if WCSession.default.isReachable {
+            WCSession.default.sendMessage(payload, replyHandler: nil) { err in
+                if loggingEnabled {
+                    print("[PhoneConnectivityManager] sendReset sendMessage error: \(err.localizedDescription)")
+                }
+            }
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] sendReset via sendMessage")
+            }
+        }
+
+        do {
+            try WCSession.default.updateApplicationContext(payload)
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] sendReset updateApplicationContext OK")
+            }
+        } catch {
+            if loggingEnabled {
+                print("[PhoneConnectivityManager] sendReset updateApplicationContext error: \(error.localizedDescription)")
+            }
         }
     }
 

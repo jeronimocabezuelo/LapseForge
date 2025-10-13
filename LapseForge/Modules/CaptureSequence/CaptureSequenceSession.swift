@@ -82,6 +82,11 @@ class CaptureSequenceSession: NSObject, ObservableObject {
     private let photoOutput = AVCapturePhotoOutput()
     private var cancellables = Set<AnyCancellable>()
     
+//    private var snapshotCancellables = Set<AnyCancellable>()
+    private var ticker: AnyCancellable?
+    private var lastSentElapsed: Int = -1
+    private var lastSentNextCaptureIn: Int = -1
+    
     init(sequence: LapseSequence) {
         self.sequence = sequence
         super.init()
@@ -108,6 +113,58 @@ class CaptureSequenceSession: NSObject, ObservableObject {
                 }
             }
             .store(in: &cancellables)
+        
+        // On-change: isRecording -> snapshot inmediato y arrancar/parar ticker
+        $isRecording
+            .removeDuplicates()
+            .sink { [weak self] recording in
+                guard let self else { return }
+                if recording {
+                    self.startSnapshotTicker()
+                } else {
+                    self.stopSnapshotTicker()
+                }
+                self.sendSnapshotToWatch(isRecording: recording)
+            }
+            .store(in: &cancellables)
+        
+        // On-change: cambios de intervalo o unidad -> snapshot
+        Publishers.CombineLatest($interval.removeDuplicates(),
+                                 $unit.removeDuplicates())
+        .sink { [weak self] _, _ in
+            self?.sendSnapshotToWatch()
+        }
+        .store(in: &cancellables)
+        
+        // On-change: nueva captura (sequence.count cambia) -> snapshot
+        // Si LapseSequence expone count como propiedad, puedes observar con un publisher propio.
+        // Si no, tras cada takePhoto/guardar, llamamos a sendSnapshotToWatch() manualmente.
+        // Para ahora, lo llamamos al final de takePhoto() y en el delegado cuando se añade la captura.
+    }
+    
+    private func sendSnapshotToWatch(throttled: Bool = false, isRecording overrideIsRecording: Bool? = nil) {
+        let effectiveIsRecording = overrideIsRecording ?? self.isRecording
+
+        // Redondeamos a segundos para evitar enviar cambios mínimos
+        let elapsedRounded = Int(recordingDuration.rounded())
+        let nextRounded = Int(max(0, nextCaptureCountdown).rounded())
+        
+        if throttled {
+            // Si no cambió nada respecto al último envío, no mandamos
+            if elapsedRounded == lastSentElapsed && nextRounded == lastSentNextCaptureIn {
+                return
+            }
+        }
+        
+        lastSentElapsed = elapsedRounded
+        lastSentNextCaptureIn = nextRounded
+        
+        let state = RecordingState(
+            isRecording: effectiveIsRecording,
+            capturesCount: sequence.count,
+            duration: recordingDuration
+        )
+        PhoneConnectivityManager.shared.sendStateSnapshot(state)
     }
     
     private func addVideoInput(position: AVCaptureDevice.Position = .back) {
@@ -124,6 +181,23 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         }
     }
     
+    private func startSnapshotTicker() {
+        guard ticker == nil else { return }
+        ticker = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.sendSnapshotToWatch(throttled: true)
+            }
+    }
+    
+    private func stopSnapshotTicker() {
+        ticker?.cancel()
+        ticker = nil
+        // Reset dedupe si quieres
+        lastSentElapsed = -1
+        lastSentNextCaptureIn = -1
+    }
+    
     func updateCamera(to position: AVCaptureDevice.Position) {
         session.beginConfiguration()
         session.inputs.forEach { session.removeInput($0) }
@@ -137,6 +211,9 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         lastCaptureDate = .now
         intervalAnchorDate = lastCaptureDate
         accumulatedPausedDuration = 0
+        
+        // Snapshot inmediato tras captura
+        sendSnapshotToWatch()
     }
 }
 
@@ -155,6 +232,9 @@ extension CaptureSequenceSession: AVCapturePhotoCaptureDelegate {
         do {
             let capture = try CustomFileManager.shared.savePhoto(data, to: sequence)
             sequence.addCapture(capture)
+            
+            // snapshot porque cambió capturesCount
+            sendSnapshotToWatch()
         } catch {
             print("❌ Error al guardar la imagen: \(error.localizedDescription)")
         }

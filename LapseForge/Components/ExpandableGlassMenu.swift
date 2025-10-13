@@ -9,7 +9,8 @@ import SwiftUI
 
 /// ExpandableGlassMenu
 ///
-/// Error conocido: el efecto glass queda cortado, eliminar el ``matchedTransitionSource(id: "ExpandableGlassMenu", in: namespace)`` soluciona el problema, pero se pierde la animación de zoom desde el propio botón. Aunque hemos seguido este tutorial [iOS 26 Custom Menu Using SwiftUI | Xcode 26](https://www.youtube.com/watch?v=RwPsJhrPP9g) y a el no le ocurría. Puede ser un error de la RC de Xcode (versión con la que se ha compilado)
+/// Error conocido: el efecto glass queda cortado, eliminar el ``matchedTransitionSource(id: "ExpandableGlassMenu", in: namespace)`` soluciona el problema, pero se pierde la animación de zoom desde el propio botón.
+/// Aunque hemos seguido este tutorial [iOS 26 Custom Menu Using SwiftUI | Xcode 26](https://www.youtube.com/watch?v=RwPsJhrPP9g) y a el no le ocurría. Puede ser un error de la RC de Xcode (versión con la que se ha compilado)
 struct ExpandableGlassMenu<Label: View, Content: View>: View {
     var isHapticEnabled: Bool = true
     @ViewBuilder var label: Label

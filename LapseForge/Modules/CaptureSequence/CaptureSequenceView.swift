@@ -148,6 +148,9 @@ struct CaptureSequenceView: View {
                 }
             }
             .idleTimerDisabled(session.isRecording)
+            .onDisappear {
+                PhoneConnectivityManager.shared.sendReset()
+            }
         }
     }
     

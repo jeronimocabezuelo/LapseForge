@@ -12,13 +12,17 @@
 		741AF8382E4B49B4009ACEFA /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8372E4B49B4009ACEFA /* CaptureView.swift */; };
 		741AF83A2E4B4B5D009ACEFA /* SequenceCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8392E4B4B5D009ACEFA /* SequenceCatalogView.swift */; };
 		744330A12E9D09B2005B12B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7443309D2E9D09B2005B12B1 /* Assets.xcassets */; };
-		744330A22E9D09B2005B12B1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309E2E9D09B2005B12B1 /* ContentView.swift */; };
+		744330A22E9D09B2005B12B1 /* WatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309E2E9D09B2005B12B1 /* WatchView.swift */; };
 		744330A32E9D09B2005B12B1 /* LapseForgeWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */; };
 		744330A42E9D09C0005B12B1 /* icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 74F377D82E7333BC00AB1A72 /* icon.icon */; };
 		744330A72E9D0B58005B12B1 /* PhoneConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */; };
 		744330AA2E9D0C5D005B12B1 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */; };
 		744330AC2E9D144E005B12B1 /* CaptureSequenceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */; };
 		744330AE2E9D146E005B12B1 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AD2E9D146E005B12B1 /* CameraPreview.swift */; };
+		744330B02E9D1A6A005B12B1 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AF2E9D1A6A005B12B1 /* RecordingState.swift */; };
+		744330B12E9D1A6D005B12B1 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AF2E9D1A6A005B12B1 /* RecordingState.swift */; };
+		744330B22E9D20C3005B12B1 /* SquareByIntrinsic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */; };
+		744330B32E9D20ED005B12B1 /* CaptureSequence.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 74F377E42E75C9BD00AB1A72 /* CaptureSequence.xcstrings */; };
 		7448D6332E3FD14500D0CB5C /* ci_post_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7448D6312E3FD14500D0CB5C /* ci_post_xcodebuild.sh */; };
 		7448D6342E3FD14500D0CB5C /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7448D6302E3FD14500D0CB5C /* ci_post_clone.sh */; };
 		7448D63D2E3FD15600D0CB5C /* LapseForgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7448D6392E3FD15600D0CB5C /* LapseForgeApp.swift */; };
@@ -84,12 +88,13 @@
 		741AF8372E4B49B4009ACEFA /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		741AF8392E4B4B5D009ACEFA /* SequenceCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceCatalogView.swift; sourceTree = "<group>"; };
 		7443309D2E9D09B2005B12B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7443309E2E9D09B2005B12B1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7443309E2E9D09B2005B12B1 /* WatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchView.swift; sourceTree = "<group>"; };
 		7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapseForgeWatchApp.swift; sourceTree = "<group>"; };
 		744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneConnectivityManager.swift; sourceTree = "<group>"; };
 		744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSequenceSession.swift; sourceTree = "<group>"; };
 		744330AD2E9D146E005B12B1 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		744330AF2E9D1A6A005B12B1 /* RecordingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingState.swift; sourceTree = "<group>"; };
 		7448D6102E3FCBC100D0CB5C /* LapseForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LapseForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7448D6302E3FD14500D0CB5C /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		7448D6312E3FD14500D0CB5C /* ci_post_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh; sourceTree = "<group>"; };
@@ -152,7 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				7443309D2E9D09B2005B12B1 /* Assets.xcassets */,
-				7443309E2E9D09B2005B12B1 /* ContentView.swift */,
+				7443309E2E9D09B2005B12B1 /* WatchView.swift */,
 				7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */,
 			);
 			path = "LapseForgeWatch Watch App";
@@ -161,6 +166,7 @@
 		744330A52E9D0B53005B12B1 /* ConnectivityManager */ = {
 			isa = PBXGroup;
 			children = (
+				744330AF2E9D1A6A005B12B1 /* RecordingState.swift */,
 				744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */,
 				744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */,
 			);
@@ -441,6 +447,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				744330A12E9D09B2005B12B1 /* Assets.xcassets in Resources */,
+				744330B32E9D20ED005B12B1 /* CaptureSequence.xcstrings in Resources */,
 				744330A42E9D09C0005B12B1 /* icon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +469,7 @@
 				741AF8352E490089009ACEFA /* CustomFileManager.swift in Sources */,
 				7448D63D2E3FD15600D0CB5C /* LapseForgeApp.swift in Sources */,
 				741AF83A2E4B4B5D009ACEFA /* SequenceCatalogView.swift in Sources */,
+				744330B02E9D1A6A005B12B1 /* RecordingState.swift in Sources */,
 				74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */,
 				74C8BA5D2E96CC2800979C0B /* IdleTimerDisabled.swift in Sources */,
 				74BD69642E475E3100532A24 /* PreviewView.swift in Sources */,
@@ -487,7 +495,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				744330A22E9D09B2005B12B1 /* ContentView.swift in Sources */,
+				744330A22E9D09B2005B12B1 /* WatchView.swift in Sources */,
+				744330B22E9D20C3005B12B1 /* SquareByIntrinsic.swift in Sources */,
+				744330B12E9D1A6D005B12B1 /* RecordingState.swift in Sources */,
 				744330AA2E9D0C5D005B12B1 /* WatchConnectivityManager.swift in Sources */,
 				744330A32E9D09B2005B12B1 /* LapseForgeWatchApp.swift in Sources */,
 			);
