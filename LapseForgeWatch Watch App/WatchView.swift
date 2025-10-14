@@ -9,33 +9,57 @@ import SwiftUI
 import Combine
 
 class WatchViewModel: ObservableObject {
-    @Published var lastState: RecordingState?
+    @Published var state: RecordingState?
     
     private var cancellables = Set<AnyCancellable>()
     
     init(manager: WatchConnectivityManager = .shared) {
         // Publicación directa del snapshot tipado
-        manager.$lastState
-            .sink { [weak self] state in
+        manager.$lastReceivedMessage
+            .compactMap({ $0 })
+            .sink { [weak self] message in
                 guard let self else { return }
-                self.lastState = state
+                setState(from: message)
+            }
+            .store(in: &cancellables)
+        
+        manager.receivedMessageSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                guard let self else { return }
+                setState(from: message)
             }
             .store(in: &cancellables)
         
         // Si quieres fallback inicial (por ejemplo, si ya hay applicationContext al activar):
         // también puedes leer manager.lastState en init y propagarlo:
-        if let initial = manager.lastState {
-            self.lastState = initial
+        if let initial = manager.lastReceivedMessage {
+            setState(from: initial)
+        }
+    }
+    
+    private func setState(from message: ConnectivityMessage) {
+        switch message {
+        case .state(let state):
+            self.state = state
+        case .reset:
+            self.state = nil
+        default: break
         }
     }
     
     // Acción de UI: reenviar evento al iPhone
-    func captureTapped() {
-        WatchConnectivityManager.shared.send(message: ["event": "captureTapped"]) { reply in
-            print("Reply:", reply)
-        } error: { err in
-            print("WC error:", err.localizedDescription)
-        }
+    func buttonTapped() {
+        guard let currentIsRecording = self.state?.isRecording else { return }
+        WatchConnectivityManager.shared.send(
+            message: .isRecording(!currentIsRecording),
+            reply: { reply in
+                print("Reply:", reply)
+            },
+            failure: { error in
+                print("WC error:", error.localizedDescription)
+            }
+        )
     }
 }
 
@@ -44,23 +68,23 @@ struct WatchView: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            if let s = viewModel.lastState {
+            if let state = viewModel.state {
                 Button(action: {
-                    viewModel.captureTapped()
+                    viewModel.buttonTapped()
                 }, label: {
-                    Image(systemName: s.isRecording ? "pause.fill" : "play.fill")
+                    Image(systemName: state.isRecording ? "pause.fill" : "play.fill")
                         .font(.largeTitle)
                         .foregroundColor(.white)
                         .padding(15)
                         .squareByIntrinsic()
-                        .glassEffect(.regular.tint(s.isRecording ? .red : .green).interactive())
+                        .glassEffect(.regular.tint(state.isRecording ? .red : .green).interactive())
                 })
                 .buttonStyle(.plain)
                 
-                Text(.CaptureSequence.captures(s.capturesCount))
-                Text(.CaptureSequence.elapsedTimeShort(formatElapsedTime(s.duration)))
+                Text(.CaptureSequence.captures(state.capturesCount))
+                Text(.CaptureSequence.elapsedTimeShort(formatElapsedTime(state.duration)))
                     .lineLimit(nil)
-                if s.isRecording {
+                if state.isRecording {
                     Text(.CaptureSequence.recording)
                         .foregroundColor(.red)
                 } else {
@@ -88,7 +112,7 @@ struct WatchView: View {
 extension WatchViewModel {
     static var mock: WatchViewModel {
         let vm = WatchViewModel()
-        vm.lastState = RecordingState(
+        vm.state = RecordingState(
             isRecording: true,
             capturesCount: 100,
             duration: 23.633333

@@ -28,7 +28,7 @@ struct LapseForgeApp: App {
         WindowGroup {
             ProjectsListView()
                 .task {
-                    PhoneConnectivityManager.shared.activate()
+                    WatchConnectivityManager.shared.activate()
                 }
         }
         .modelContainer(sharedModelContainer)

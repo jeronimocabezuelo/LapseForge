@@ -15,14 +15,16 @@
 		744330A22E9D09B2005B12B1 /* WatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309E2E9D09B2005B12B1 /* WatchView.swift */; };
 		744330A32E9D09B2005B12B1 /* LapseForgeWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */; };
 		744330A42E9D09C0005B12B1 /* icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 74F377D82E7333BC00AB1A72 /* icon.icon */; };
-		744330A72E9D0B58005B12B1 /* PhoneConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */; };
-		744330AA2E9D0C5D005B12B1 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */; };
 		744330AC2E9D144E005B12B1 /* CaptureSequenceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */; };
 		744330AE2E9D146E005B12B1 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AD2E9D146E005B12B1 /* CameraPreview.swift */; };
 		744330B02E9D1A6A005B12B1 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AF2E9D1A6A005B12B1 /* RecordingState.swift */; };
 		744330B12E9D1A6D005B12B1 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330AF2E9D1A6A005B12B1 /* RecordingState.swift */; };
 		744330B22E9D20C3005B12B1 /* SquareByIntrinsic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D769732E9136750076BCD4 /* SquareByIntrinsic.swift */; };
 		744330B32E9D20ED005B12B1 /* CaptureSequence.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 74F377E42E75C9BD00AB1A72 /* CaptureSequence.xcstrings */; };
+		744330B52E9D58EB005B12B1 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330B42E9D58E3005B12B1 /* WatchConnectivityManager.swift */; };
+		744330B62E9D58EB005B12B1 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330B42E9D58E3005B12B1 /* WatchConnectivityManager.swift */; };
+		744330B82E9E4E1C005B12B1 /* ConnectivityMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330B72E9E4E1C005B12B1 /* ConnectivityMessage.swift */; };
+		744330B92E9E4E1C005B12B1 /* ConnectivityMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744330B72E9E4E1C005B12B1 /* ConnectivityMessage.swift */; };
 		7448D6332E3FD14500D0CB5C /* ci_post_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7448D6312E3FD14500D0CB5C /* ci_post_xcodebuild.sh */; };
 		7448D6342E3FD14500D0CB5C /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7448D6302E3FD14500D0CB5C /* ci_post_clone.sh */; };
 		7448D63D2E3FD15600D0CB5C /* LapseForgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7448D6392E3FD15600D0CB5C /* LapseForgeApp.swift */; };
@@ -90,11 +92,11 @@
 		7443309D2E9D09B2005B12B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7443309E2E9D09B2005B12B1 /* WatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchView.swift; sourceTree = "<group>"; };
 		7443309F2E9D09B2005B12B1 /* LapseForgeWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapseForgeWatchApp.swift; sourceTree = "<group>"; };
-		744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneConnectivityManager.swift; sourceTree = "<group>"; };
-		744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		744330AB2E9D144E005B12B1 /* CaptureSequenceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSequenceSession.swift; sourceTree = "<group>"; };
 		744330AD2E9D146E005B12B1 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		744330AF2E9D1A6A005B12B1 /* RecordingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingState.swift; sourceTree = "<group>"; };
+		744330B42E9D58E3005B12B1 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		744330B72E9E4E1C005B12B1 /* ConnectivityMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityMessage.swift; sourceTree = "<group>"; };
 		7448D6102E3FCBC100D0CB5C /* LapseForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LapseForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7448D6302E3FD14500D0CB5C /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		7448D6312E3FD14500D0CB5C /* ci_post_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh; sourceTree = "<group>"; };
@@ -167,8 +169,8 @@
 			isa = PBXGroup;
 			children = (
 				744330AF2E9D1A6A005B12B1 /* RecordingState.swift */,
-				744330A62E9D0B58005B12B1 /* PhoneConnectivityManager.swift */,
-				744330A82E9D0B8D005B12B1 /* WatchConnectivityManager.swift */,
+				744330B72E9E4E1C005B12B1 /* ConnectivityMessage.swift */,
+				744330B42E9D58E3005B12B1 /* WatchConnectivityManager.swift */,
 			);
 			path = ConnectivityManager;
 			sourceTree = "<group>";
@@ -466,8 +468,10 @@
 				74E15BE12E6204C200E148F7 /* ImportSequenceView.swift in Sources */,
 				74E15BE72E6EE11200E148F7 /* Optional+Extension.swift in Sources */,
 				74BD695C2E43CFD300532A24 /* CaptureSequenceView.swift in Sources */,
+				744330B52E9D58EB005B12B1 /* WatchConnectivityManager.swift in Sources */,
 				741AF8352E490089009ACEFA /* CustomFileManager.swift in Sources */,
 				7448D63D2E3FD15600D0CB5C /* LapseForgeApp.swift in Sources */,
+				744330B92E9E4E1C005B12B1 /* ConnectivityMessage.swift in Sources */,
 				741AF83A2E4B4B5D009ACEFA /* SequenceCatalogView.swift in Sources */,
 				744330B02E9D1A6A005B12B1 /* RecordingState.swift in Sources */,
 				74BD696B2E47A79200532A24 /* Array+Extension.swift in Sources */,
@@ -475,7 +479,6 @@
 				74BD69642E475E3100532A24 /* PreviewView.swift in Sources */,
 				74BD69672E477F9D00532A24 /* IntPicker.swift in Sources */,
 				7448D6412E3FD17600D0CB5C /* Utils.swift in Sources */,
-				744330A72E9D0B58005B12B1 /* PhoneConnectivityManager.swift in Sources */,
 				74BD695A2E43CB5200532A24 /* ProjectView.swift in Sources */,
 				744330AE2E9D146E005B12B1 /* CameraPreview.swift in Sources */,
 				744330AC2E9D144E005B12B1 /* CaptureSequenceSession.swift in Sources */,
@@ -496,9 +499,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				744330A22E9D09B2005B12B1 /* WatchView.swift in Sources */,
+				744330B82E9E4E1C005B12B1 /* ConnectivityMessage.swift in Sources */,
+				744330B62E9D58EB005B12B1 /* WatchConnectivityManager.swift in Sources */,
 				744330B22E9D20C3005B12B1 /* SquareByIntrinsic.swift in Sources */,
 				744330B12E9D1A6D005B12B1 /* RecordingState.swift in Sources */,
-				744330AA2E9D0C5D005B12B1 /* WatchConnectivityManager.swift in Sources */,
 				744330A32E9D09B2005B12B1 /* LapseForgeWatchApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

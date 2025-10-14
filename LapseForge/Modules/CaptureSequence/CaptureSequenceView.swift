@@ -149,7 +149,7 @@ struct CaptureSequenceView: View {
             }
             .idleTimerDisabled(session.isRecording)
             .onDisappear {
-                PhoneConnectivityManager.shared.sendReset()
+                WatchConnectivityManager.shared.send(message: .reset)
             }
         }
     }

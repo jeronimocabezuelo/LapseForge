@@ -99,17 +99,15 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         }
         
         // Suscripción a eventos del iPhone (o Watch si esta clase vive en iPhone)
-        PhoneConnectivityManager.shared.lastReceivedPayloadSubject
+        WatchConnectivityManager.shared.receivedMessageSubject
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] payload in
+            .sink { [weak self] message in
                 guard let self else { return }
-                if let event = payload["event"] as? String {
-                    switch event {
-                    case "captureTapped":
-                        self.playPauseTapped()
-                    default:
-                        break
-                    }
+                switch message {
+                case .isRecording(let isRecording):
+                    guard  isRecording != self.isRecording else { return }
+                    playPauseTapped()
+                default: break
                 }
             }
             .store(in: &cancellables)
@@ -164,7 +162,7 @@ class CaptureSequenceSession: NSObject, ObservableObject {
             capturesCount: sequence.count,
             duration: recordingDuration
         )
-        PhoneConnectivityManager.shared.sendStateSnapshot(state)
+        WatchConnectivityManager.shared.send(message: .state(state))
     }
     
     private func addVideoInput(position: AVCaptureDevice.Position = .back) {

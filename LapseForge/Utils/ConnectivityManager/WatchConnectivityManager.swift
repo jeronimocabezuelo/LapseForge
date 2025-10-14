@@ -5,7 +5,6 @@
 //  Created by Jerónimo Cabezuelo Ruiz on 13/10/25.
 //
 
-
 import Foundation
 import WatchConnectivity
 import Combine
@@ -13,30 +12,29 @@ import Combine
 final class WatchConnectivityManager: NSObject, WCSessionDelegate {
     static let shared = WatchConnectivityManager()
     
-    @Published private(set) var lastReceivedPayload: [String: Any] = [:]
-    @Published private(set) var lastState: RecordingState?
-    let lastReceivedPayloadSubject = PassthroughSubject<[String: Any], Never>()
+    private override init() {
+        super.init()
+    }
     
     var isReachable: Bool {
         WCSession.default.isReachable
     }
     
-    private var activated = false
+    @Published private(set) var lastReceivedMessage: ConnectivityMessage? = nil
+    let receivedMessageSubject = PassthroughSubject<ConnectivityMessage, Never>()
     
-    private override init() {
-        super.init()
-    }
+    private var activated = false
     
     func activate() {
         guard WCSession.isSupported() else {
             if loggingEnabled {
-                print("[WatchConnectivityManager] WCSession is not supported on this device.")
+                print("[\(Self.self)] WCSession is not supported on this device.")
             }
             return
         }
         guard !activated else {
             if loggingEnabled {
-                print("[WatchConnectivityManager] Already activated.")
+                print("[\(Self.self)] Already activated.")
             }
             return
         }
@@ -47,113 +45,176 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
         activated = true
         
         if loggingEnabled {
-            print("[WatchConnectivityManager] WCSession activated.")
+            print("[\(Self.self)] WCSession activated.")
         }
     }
     
-    // MARK: - WCSessionDelegate
-    
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
         if loggingEnabled {
             if let error = error {
-                print("[WatchConnectivityManager] Activation completed with error: \(error.localizedDescription)")
+                print("[\(Self.self)] Activation completed with error: \(error.localizedDescription)")
             } else {
-                print("[WatchConnectivityManager] Activation completed with state: \(activationState.rawValue)")
+                print("[\(Self.self)] Activation completed with state: \(activationState)")
             }
         }
     }
     
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+    #if os(iOS)
+    func sessionDidBecomeInactive(_ session: WCSession) {
         if loggingEnabled {
-            print("[WatchConnectivityManager] Did receive message: \(message)")
+            print("[\(Self.self)] sessionDidBecomeInactive")
         }
-        DispatchQueue.main.async { [weak self] in
-            self?.lastReceivedPayload = message
-            self?.lastReceivedPayloadSubject.send(message)
-        }
-        handleStatePayloadIfNeeded(message)
-        handleResetIfNeeded(message)
     }
     
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+    func sessionDidDeactivate(_ session: WCSession) {
         if loggingEnabled {
-            print("[WatchConnectivityManager] Did receive application context: \(applicationContext)")
+            print("[\(Self.self)] sessionDidDeactivate - reactivating session")
         }
-        DispatchQueue.main.async { [weak self] in
-            self?.lastReceivedPayload = applicationContext
-            self?.lastReceivedPayloadSubject.send(applicationContext)
-        }
-        handleStatePayloadIfNeeded(applicationContext)
-        handleResetIfNeeded(applicationContext)
+        WCSession.default.activate()
     }
+    #endif
     
-    // MARK: - State Handling (iPhone -> Watch)
-    private func handleStatePayloadIfNeeded(_ dict: [String: Any]) {
-        guard let type = dict["type"] as? String, type == "state" else { return }
-        guard let data = dict["payload"] as? Data else { return }
-        do {
-            let decoded = try JSONDecoder().decode(RecordingState.self, from: data)
-            if loggingEnabled {
-                print("[WatchConnectivityManager] Decoded RecordingState: \(decoded)")
-            }
-            DispatchQueue.main.async { [weak self] in
-                self?.lastState = decoded
-            }
-        } catch {
-            if loggingEnabled {
-                print("[WatchConnectivityManager] Failed to decode RecordingState: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    private func handleResetIfNeeded(_ dict: [String: Any]) {
-        guard let type = dict["type"] as? String, type == "reset" else { return }
-        DispatchQueue.main.async { [weak self] in
-            self?.lastState = nil
-        }
+    func sessionReachabilityDidChange(_ session: WCSession) {
         if loggingEnabled {
-            print("[WatchConnectivityManager] Received reset, clearing lastState.")
+            print("[\(Self.self)] reachability changed: \(session.isReachable)")
         }
     }
-
     
-    // MARK: - Sending
+    // MARK: - Sending Messages
     func send(
-        message: [String: Any],
-        reply: (([String: Any]) -> Void)? = nil,
-        error: ((Error) -> Void)? = nil
+        message: ConnectivityMessage,
+        reply: ((ConnectivityMessage) -> Void)? = nil,
+        failure: ((Error) -> Void)? = nil
     ) {
-        guard isReachable else {
-            if loggingEnabled {
-                print("[WatchConnectivityManager] Cannot send message, phone not reachable.")
-            }
-            let err = NSError(domain: "WatchConnectivity", code: 1, userInfo: [NSLocalizedDescriptionKey: "Phone not reachable"])
-            error?(err)
+        guard let dictionary = message.dictionary else {
+            failure?(NSError(domain: "Failed to serialize message to dictionary", code: -1))
             return
         }
         
-        WCSession.default.sendMessage(message, replyHandler: reply, errorHandler: { sendError in
-            if loggingEnabled {
-                print("[WatchConnectivityManager] Error sending message: \(sendError.localizedDescription)")
+        if isReachable {
+            send(
+                message: dictionary,
+                reply: { replyMessage in
+                    guard let replyMessage = ConnectivityMessage(dictionary: replyMessage) else {
+                        failure?(NSError(domain: "Failed to serialize message to dictionary", code: -1))
+                        return
+                    }
+                    
+                    reply?(replyMessage)
+                },
+                failure: failure
+            )
+        } else {
+            do {
+                try sendApplicationContext(dictionary)
+            } catch let error {
+                failure?(error)
             }
-            error?(sendError)
+        }
+    }
+    
+    private func send(
+        message: [String: Any],
+        reply: (([String: Any]) -> Void)? = nil,
+        failure: ((Error) -> Void)? = nil
+    ) {
+        guard isReachable else {
+            if loggingEnabled {
+                print("[\(Self.self)] send(message:) failed - watch not reachable")
+            }
+            let error = NSError(domain: "PhoneConnectivity", code: 1, userInfo: [NSLocalizedDescriptionKey: "Watch not reachable"])
+            failure?(error)
+            return
+        }
+        
+        WCSession.default.sendMessage(message, replyHandler: reply, errorHandler: { error in
+            if loggingEnabled {
+                print("[\(Self.self)] send(message:) error: \(error.localizedDescription)")
+            }
+            failure?(error)
         })
         
         if loggingEnabled {
-            print("[WatchConnectivityManager] Sent message: \(message)")
+            print("[\(Self.self)] send(message:) sent message: \(message)")
         }
     }
     
     func sendApplicationContext(_ context: [String: Any]) throws {
-        if loggingEnabled {
-            print("[WatchConnectivityManager] Sending application context: \(context)")
+        do {
+            try WCSession.default.updateApplicationContext(context)
+            if loggingEnabled {
+                print("[\(Self.self)] sendApplicationContext: updated context: \(context)")
+            }
+        } catch {
+            if loggingEnabled {
+                print("[\(Self.self)] sendApplicationContext: failed with error: \(error.localizedDescription)")
+            }
+            throw error
         }
-        try WCSession.default.updateApplicationContext(context)
     }
     
-    func sessionReachabilityDidChange(_ session: WCSession) {
-        if loggingEnabled {
-            print("[WatchConnectivityManager] reachability changed: \(session.isReachable)")
+    // MARK: - Receiving Messages
+    func didReceiveMessage(
+        message: ConnectivityMessage,
+        replyHandler: ((ConnectivityMessage) -> Void)? = nil
+    ) {
+        DispatchQueue.main.async {
+            self.lastReceivedMessage = message
+            self.receivedMessageSubject.send(message)
         }
+        
+        replyHandler?(.status(true))
+    }
+    
+    func didReceiveMessage(
+        message: [String: Any],
+        replyHandler: (([String: Any]) -> Void)? = nil
+    ) {
+        if loggingEnabled {
+            print("[\(Self.self)] didReceiveMessage: \(message)")
+        }
+        
+        guard let message = ConnectivityMessage(dictionary: message) else {
+            return
+        }
+        
+        let replyHandler: ((ConnectivityMessage) -> Void)? = replyHandler == nil ? nil : { reply in
+            if let replyMessage = reply.dictionary {
+                replyHandler?(replyMessage)
+            } else {
+                replyHandler?(ConnectivityMessage.status(false).dictionary ?? [:])
+            }
+        }
+        
+        self.didReceiveMessage(message: message, replyHandler: replyHandler)
+    }
+    
+    func session(
+        _ session: WCSession,
+        didReceiveMessage message: [String: Any]
+    ) {
+        didReceiveMessage(message: message)
+    }
+    
+    func session(
+        _ session: WCSession,
+        didReceiveMessage message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        didReceiveMessage(message: message, replyHandler: replyHandler)
+    }
+    
+    func session(
+        _ session: WCSession,
+        didReceiveApplicationContext applicationContext: [String: Any]
+    ) {
+        didReceiveMessage(message: applicationContext)
+    }
+    
+    func session(
+        _ session: WCSession,
+        didReceiveUserInfo userInfo: [String: Any] = [:]
+    ) {
+        didReceiveMessage(message: userInfo)
     }
 }
