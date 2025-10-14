@@ -20,7 +20,7 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
         WCSession.default.isReachable
     }
     
-    @Published private(set) var lastReceivedMessage: ConnectivityMessage? = nil
+    @Published private(set) var lastReceivedMessage: ConnectivityMessage?
     let receivedMessageSubject = PassthroughSubject<ConnectivityMessage, Never>()
     
     private var activated = false
