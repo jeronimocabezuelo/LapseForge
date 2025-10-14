@@ -767,7 +767,7 @@
 				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = LapseForgeWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = LapseForge;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.jeronimoCabezuelo.LapseForge;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -801,7 +801,7 @@
 				DEVELOPMENT_TEAM = 6QVP2HM2ZN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = LapseForgeWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = LapseForge;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.jeronimoCabezuelo.LapseForge;
 				LD_RUNPATH_SEARCH_PATHS = (
