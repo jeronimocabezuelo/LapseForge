@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		740C07752EAE55C5000365A1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740C07742EAE55C4000365A1 /* UIImage+Extension.swift */; };
 		741AF8332E48C0FA009ACEFA /* ConfigurationSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8322E48C0FA009ACEFA /* ConfigurationSequenceView.swift */; };
 		741AF8352E490089009ACEFA /* CustomFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8342E490082009ACEFA /* CustomFileManager.swift */; };
 		741AF8382E4B49B4009ACEFA /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8372E4B49B4009ACEFA /* CaptureView.swift */; };
@@ -85,6 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		740C07742EAE55C4000365A1 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		741AF8322E48C0FA009ACEFA /* ConfigurationSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationSequenceView.swift; sourceTree = "<group>"; };
 		741AF8342E490082009ACEFA /* CustomFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFileManager.swift; sourceTree = "<group>"; };
 		741AF8372E4B49B4009ACEFA /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				74BD696A2E47A78E00532A24 /* Array+Extension.swift */,
 				74E15BE62E6EE10D00E148F7 /* Optional+Extension.swift */,
 				74BD69612E46588700532A24 /* TimeInterval+Extension.swift */,
+				740C07742EAE55C4000365A1 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				74D769782E92921A0076BCD4 /* ExpandableGlassMenu.swift in Sources */,
 				74BD69692E477FB700532A24 /* TimeIntervalPicker.swift in Sources */,
 				74E15BE32E6609BF00E148F7 /* ExporterButton.swift in Sources */,
+				740C07752EAE55C5000365A1 /* UIImage+Extension.swift in Sources */,
 				74E15BE12E6204C200E148F7 /* ImportSequenceView.swift in Sources */,
 				74E15BE72E6EE11200E148F7 /* Optional+Extension.swift in Sources */,
 				74BD695C2E43CFD300532A24 /* CaptureSequenceView.swift in Sources */,

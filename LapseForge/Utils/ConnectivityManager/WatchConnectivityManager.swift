@@ -21,6 +21,7 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
     }
     
     @Published private(set) var lastReceivedMessage: ConnectivityMessage?
+    @Published private(set) var lastReceivedData: Data?
     let receivedMessageSubject = PassthroughSubject<ConnectivityMessage, Never>()
     
     private var activated = false
@@ -216,5 +217,65 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
         didReceiveUserInfo userInfo: [String: Any] = [:]
     ) {
         didReceiveMessage(message: userInfo)
+    }
+    
+    // MARK: - Sending Data
+    func sendData(
+        _ data: Data,
+        reply: ((ConnectivityMessage) -> Void)? = nil,
+        failure: ((Error) -> Void)? = nil
+    ) {
+        guard isReachable else {
+            if loggingEnabled {
+                print("[\(Self.self)] send(message:) failed - watch not reachable")
+            }
+            let error = NSError(domain: "PhoneConnectivity", code: 1, userInfo: [NSLocalizedDescriptionKey: "Watch not reachable"])
+            failure?(error)
+            return
+        }
+        
+        let replyHandler: ((Data) -> Void)? = reply == nil ? nil : { data in
+            guard let message = ConnectivityMessage(data: data) else { return }
+            reply?(message)
+        }
+        
+        WCSession.default.sendMessageData(
+            data,
+            replyHandler: replyHandler,
+            errorHandler: failure
+        )
+    }
+    
+    // MARK: - Receiving Data
+    func didReceiveData(
+        data: Data,
+        replyHandler: ((ConnectivityMessage) -> Void)? = nil
+    ) {
+        self.lastReceivedData = data
+        
+        replyHandler?(.dataReceived)
+    }
+    
+    func session(
+        _ session: WCSession,
+        didReceiveMessageData messageData: Data
+    ) {
+        didReceiveData(data: messageData)
+    }
+    
+    func session(
+        _ session: WCSession,
+        didReceiveMessageData messageData: Data,
+        replyHandler: @escaping (Data) -> Void
+    ) {
+        let replyHandler: ((ConnectivityMessage) -> Void) = { reply in
+            guard let data = reply.data else { return }
+            
+            replyHandler(data)
+        }
+        didReceiveData(
+            data: messageData,
+            replyHandler: replyHandler
+        )
     }
 }

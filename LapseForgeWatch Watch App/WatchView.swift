@@ -10,6 +10,7 @@ import Combine
 
 class WatchViewModel: ObservableObject {
     @Published var state: RecordingState?
+    @Published var image: UIImage?
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -20,6 +21,14 @@ class WatchViewModel: ObservableObject {
             .sink { [weak self] message in
                 guard let self else { return }
                 setState(from: message)
+            }
+            .store(in: &cancellables)
+        
+        manager.$lastReceivedData
+            .compactMap({ $0 })
+            .sink { [weak self] data in
+                guard let self else { return }
+                setImage(data: data)
             }
             .store(in: &cancellables)
         
@@ -43,8 +52,15 @@ class WatchViewModel: ObservableObject {
         case .state(let state):
             self.state = state
         case .reset:
+            self.image = nil
             self.state = nil
         default: break
+        }
+    }
+    
+    private func setImage(data: Data) {
+        if let image = UIImage(data: data) {
+            self.image = image
         }
     }
     
@@ -69,21 +85,30 @@ struct WatchView: View {
     var body: some View {
         VStack(spacing: 8) {
             if let state = viewModel.state {
-                Button(action: {
-                    viewModel.buttonTapped()
-                }, label: {
-                    Image(systemName: state.isRecording ? "pause.fill" : "play.fill")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                        .padding(15)
-                        .squareByIntrinsic()
-                        .glassEffect(.regular.tint(state.isRecording ? .red : .green).interactive())
-                })
-                .buttonStyle(.plain)
-                
-                Text(.CaptureSequence.captures(state.capturesCount))
-                Text(.CaptureSequence.elapsedTimeShort(formatElapsedTime(state.duration)))
-                    .lineLimit(nil)
+                if let image = viewModel.image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                }
+                HStack {
+                    Button(action: {
+                        viewModel.buttonTapped()
+                    }, label: {
+                        Image(systemName: state.isRecording ? "pause.fill" : "play.fill")
+                            .font(.body)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .squareByIntrinsic()
+                            .glassEffect(.regular.tint(state.isRecording ? .red : .green).interactive())
+                    })
+                    .buttonStyle(.plain)
+                    
+                    VStack {
+                        Text(.CaptureSequence.captures(state.capturesCount))
+                        Text(.CaptureSequence.elapsedTimeShort(formatElapsedTime(state.duration)))
+                            .lineLimit(nil)
+                    }
+                }
                 if state.isRecording {
                     Text(.CaptureSequence.recording)
                         .foregroundColor(.red)
@@ -117,6 +142,7 @@ extension WatchViewModel {
             capturesCount: 100,
             duration: 23.633333
         )
+        vm.image = UIImage(named: "mock")
         return vm
     }
 }

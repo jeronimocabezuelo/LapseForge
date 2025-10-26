@@ -12,6 +12,7 @@ enum ConnectivityMessage {
     case state(RecordingState)
     case reset
     case status(Bool)
+    case dataReceived
     
     var dictionary: [String: Any]? {
         switch self {
@@ -26,7 +27,15 @@ enum ConnectivityMessage {
             return ["type": "reset"]
         case .status(let status):
             return ["type": "status", "value": status]
+        case .dataReceived:
+            return ["type": "dataReceived"]
         }
+    }
+    
+    var data: Data? {
+        guard let dictionary else { return nil }
+        
+        return try? JSONSerialization.data(withJSONObject: dictionary)
     }
 }
 
@@ -57,7 +66,16 @@ extension ConnectivityMessage {
                 return nil
             }
             self = .status(value)
+        case "dataReceived":
+            self = .dataReceived
         default: return nil
         }
+    }
+    
+    init?(data: Data) {
+        guard let dictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+        
+        self.init(dictionary: dictionary)
     }
 }
