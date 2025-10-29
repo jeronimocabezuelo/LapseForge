@@ -227,11 +227,15 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
     ) {
         guard isReachable else {
             if loggingEnabled {
-                print("[\(Self.self)] send(message:) failed - watch not reachable")
+                print("[\(Self.self)] send(data:) failed - watch not reachable")
             }
             let error = NSError(domain: "PhoneConnectivity", code: 1, userInfo: [NSLocalizedDescriptionKey: "Watch not reachable"])
             failure?(error)
             return
+        }
+        
+        if loggingEnabled {
+            print("[\(Self.self)] send(data:) \(data)")
         }
         
         let replyHandler: ((Data) -> Void)? = reply == nil ? nil : { data in
@@ -251,6 +255,10 @@ final class WatchConnectivityManager: NSObject, WCSessionDelegate {
         data: Data,
         replyHandler: ((ConnectivityMessage) -> Void)? = nil
     ) {
+        if loggingEnabled {
+            print("[\(Self.self)] didReceiveData(data:) data: \(data)")
+        }
+        
         self.lastReceivedData = data
         
         replyHandler?(.dataReceived)
