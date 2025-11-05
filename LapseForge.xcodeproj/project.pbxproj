@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		740C07752EAE55C5000365A1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740C07742EAE55C4000365A1 /* UIImage+Extension.swift */; };
+		740C07842EBBD5A0000365A1 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 740C07832EBBD5A0000365A1 /* ZIPFoundation */; };
 		741AF8332E48C0FA009ACEFA /* ConfigurationSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8322E48C0FA009ACEFA /* ConfigurationSequenceView.swift */; };
 		741AF8352E490089009ACEFA /* CustomFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8342E490082009ACEFA /* CustomFileManager.swift */; };
 		741AF8382E4B49B4009ACEFA /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741AF8372E4B49B4009ACEFA /* CaptureView.swift */; };
@@ -144,6 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				740C07842EBBD5A0000365A1 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +364,7 @@
 			);
 			name = LapseForge;
 			packageProductDependencies = (
+				740C07832EBBD5A0000365A1 /* ZIPFoundation */,
 			);
 			productName = LapseForge;
 			productReference = 7448D6102E3FCBC100D0CB5C /* LapseForge.app */;
@@ -416,6 +419,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7448D62D2E3FCF7000D0CB5C /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				740C07822EBBD5A0000365A1 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7448D6112E3FCBC100D0CB5C /* Products */;
@@ -862,6 +866,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		740C07822EBBD5A0000365A1 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.20;
+			};
+		};
 		7448D62D2E3FCF7000D0CB5C /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
@@ -873,6 +885,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		740C07832EBBD5A0000365A1 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 740C07822EBBD5A0000365A1 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
 		7448D62E2E3FD07700D0CB5C /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7448D62D2E3FCF7000D0CB5C /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;

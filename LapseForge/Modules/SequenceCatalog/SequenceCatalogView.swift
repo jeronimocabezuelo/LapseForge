@@ -17,10 +17,16 @@ private struct SequenceCatalogCaptureModel {
 }
 
 struct SequenceCatalogView: View {
+    private struct ShareItem: Identifiable {
+        let id: UUID = UUID()
+        let url: URL
+    }
+    
     let sequence: LapseSequence
     var onSaveSequence: () -> Void
     
     @State private var captures: [SequenceCatalogCaptureModel] = []
+    @State private var shareZipItem: ShareItem?
     
     @Environment(\.dismiss) private var dismiss
     
@@ -100,10 +106,9 @@ struct SequenceCatalogView: View {
     @ViewBuilder
     var exportButton: some View {
         Button(.SequenceCatalog.exportFrames, role: .cancel) {
-            // TODO: Implementar esta funcionalidad.
+            exportFrames()
         }
         .buttonStyle(.borderedProminent)
-        .disabled(true)
     }
     
     @ViewBuilder
@@ -149,12 +154,38 @@ struct SequenceCatalogView: View {
             .task {
                 calculeCaptures()
             }
+            .sheet(item: $shareZipItem, content: { item in
+                ShareView(url: item.url)
+            })
         }
     }
     
     private func calculeCaptures() {
         captures = sequence.captures.map(SequenceCatalogCaptureModel.init)
     }
+    
+    private func exportFrames() {
+        do {
+            let selectedCaptures = captures.filter(\.selected).map(\.capture)
+            let zipUrl = try CustomFileManager.shared.zip(from: selectedCaptures)
+            
+            runOnMainThread {
+                self.shareZipItem = .init(url: zipUrl)
+            }
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+}
+
+struct ShareView: UIViewControllerRepresentable {
+    let url: URL
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: [url], applicationActivities: nil)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

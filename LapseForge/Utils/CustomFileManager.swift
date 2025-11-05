@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ZIPFoundation
 
 protocol SequenceProtocol: Identifiable<UUID> {
     associatedtype CaptureType: CaptureProtocol
@@ -67,6 +68,42 @@ class CustomFileManager {
         return try Data(contentsOf: capturePath)
     }
     
+    func zip(from captures: [LapseCapture]) throws -> URL {
+        guard let sequence = captures.first?.sequence else {
+            throw FileManagerError.insufficientFiles
+        }
+        
+        let zipUrl = fileManager.temporaryDirectory.appending(path: "\(sequence.directoryName).zip")
+        
+        let urls: [URL] = captures.compactMap({
+            guard let sequence = $0.sequence else { return nil }
+            do {
+                let url = try getPhotoUrl(from: sequence, at: $0.index)
+                return url
+            } catch {
+                print("No se pudo añadir una captura al Zip: \(error.localizedDescription)")
+                return nil
+            }
+        })
+        
+        guard !urls.isEmpty else { throw FileManagerError.insufficientFiles }
+        
+        if fileManager.fileExists(atPath: zipUrl.path) {
+            try fileManager.removeItem(at: zipUrl)
+        }
+        
+        // 3) Crear zip y añadir entradas
+        let archive = try Archive(url: zipUrl, accessMode: .create)
+        
+        for url in urls {
+            let fileName = url.lastPathComponent
+            
+            try archive.addEntry(with: fileName, fileURL: url)
+        }
+        
+        return zipUrl
+    }
+    
     func removeUnusedPhotos(keeping projects: [LapseProject]) throws {
         guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw FileManagerError.invalidDirectory
@@ -112,4 +149,5 @@ class CustomFileManager {
 enum FileManagerError: Error {
     case invalidDirectory
     case noPhotoAtIndex
+    case insufficientFiles
 }
