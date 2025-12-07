@@ -88,6 +88,7 @@ struct CaptureSequenceView: View {
                             in: session.zoomRange
                         )
                     }
+                    Toggle(.CaptureSequence.flash, isOn: $session.torchEnabled)
                     HStack {
                         VStack {
                             Slider(

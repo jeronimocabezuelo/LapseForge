@@ -60,6 +60,7 @@ class CaptureSequenceSession: NSObject, ObservableObject {
     @Published var zoomFactor: CGFloat = 1.0
     var minZoomFactor: CGFloat = 1.0
     var maxZoomFactor: CGFloat = 1.0
+    @Published var torchEnabled: Bool = false
     
     var zoomRange: ClosedRange<CGFloat> { minZoomFactor...maxZoomFactor }
     
@@ -157,7 +158,14 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         
         $zoomFactor
             .removeDuplicates()
-            .sink { [weak self] _ in self?.updateZoom() }
+            .sink { [weak self] newValue in self?.updateZoom(newValue)
+            }
+            .store(in: &cancellables)
+        
+        $torchEnabled
+            .removeDuplicates()
+            .sink { [weak self] newValue in self?.updateTorch(newValue)
+            }
             .store(in: &cancellables)
         
         // Suscripción a eventos del iPhone (o Watch si esta clase vive en iPhone)
@@ -299,7 +307,9 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         session.commitConfiguration()
     }
     
-    private func updateZoom() {
+    private func updateZoom(_ zoom: CGFloat? = nil) {
+        let zoomFactor = zoom ?? zoomFactor
+        
         guard let videoInput = session.inputs.compactMap({ $0 as? AVCaptureDeviceInput }).first(where: { $0.device.hasMediaType(.video) }) else { return }
         
         let device = videoInput.device
@@ -311,6 +321,24 @@ class CaptureSequenceSession: NSObject, ObservableObject {
             device.unlockForConfiguration()
         } catch {
             print("Failed to lock device for configuration: \(error.localizedDescription)")
+        }
+    }
+    
+    private func updateTorch(_ enabled: Bool? = nil) {
+        let torchEnabled = enabled ?? torchEnabled
+        
+        guard let videoInput = session.inputs.compactMap({ $0 as? AVCaptureDeviceInput }).first(where: { $0.device.hasMediaType(.video) }) else { return }
+        
+        let device = videoInput.device
+        
+        if device.hasTorch {
+            do {
+                try device .lockForConfiguration()
+                device.torchMode = torchEnabled ? .on : .off
+                device.unlockForConfiguration()
+            } catch {
+                print("Failed to lock device for configuration: \(error.localizedDescription)")
+            }
         }
     }
     
