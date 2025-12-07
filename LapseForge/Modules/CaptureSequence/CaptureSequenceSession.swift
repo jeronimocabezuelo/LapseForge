@@ -22,12 +22,40 @@ enum CaptureSequenceCamera {
     }
 }
 
+enum CaptureSequencePreset: String, CaseIterable, Identifiable {
+    case hd4k
+    case hd1080p
+    case hd720p
+    case sd
+    
+    var id: String { self.rawValue }
+    
+    fileprivate var preset: AVCaptureSession.Preset {
+        switch self {
+        case .hd4k: return .hd4K3840x2160
+        case .hd1080p: return .hd1920x1080
+        case .hd720p: return .hd1280x720
+        case .sd: return .vga640x480
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .hd4k: return "4K"
+        case .hd1080p: return "1080p"
+        case .hd720p: return "720p"
+        case .sd: return "SD"
+        }
+    }
+}
+
 class CaptureSequenceSession: NSObject, ObservableObject {
     let sequence: LapseSequence
     
     @Published var interval: Double = 1.0
     @Published var unit: TimeUnit = .seconds
     @Published var selectedCamera: CaptureSequenceCamera = .back
+    @Published var selectedPreset: CaptureSequencePreset = .hd4k
     
     @Published var isRecording: Bool = false
     @Published var startCurrentRecording: Date?
@@ -38,6 +66,10 @@ class CaptureSequenceSession: NSObject, ObservableObject {
     @Published var accumulatedPausedDuration: TimeInterval = 0
     
     var waitingImageReply: Bool = false
+    
+    var availablePresets: [CaptureSequencePreset] {
+        return CaptureSequencePreset.allCases.filter({ session.canSetSessionPreset($0.preset)})
+    }
     
     var recordingDuration: TimeInterval {
         var result = previousRecordingDuration
@@ -184,8 +216,14 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         WatchConnectivityManager.shared.send(message: .state(state))
     }
     
-    private func addVideoInput(position: AVCaptureDevice.Position = .back) {
+    private func addVideoInput() {
+        let preset = selectedPreset.preset
+        session.sessionPreset = preset
+        
+        let position = selectedCamera.position
+
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position) else { return }
+        
         guard let input = try? AVCaptureDeviceInput(device: device) else { return }
         if session.canAddInput(input) {
             session.addInput(input)
@@ -229,11 +267,10 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         lastSentNextCaptureIn = -1
     }
     
-    func updateCamera(to camera: CaptureSequenceCamera) {
-        let position = camera.position
+    func updateCamera() {
         session.beginConfiguration()
         session.inputs.forEach { session.removeInput($0) }
-        addVideoInput(position: position)
+        addVideoInput()
         session.commitConfiguration()
     }
     

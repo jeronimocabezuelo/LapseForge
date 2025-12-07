@@ -29,7 +29,7 @@ Por ahora, LapseForge no está disponible en la App Store. Próximamente aquí s
 
 ### Versión 1.1
 - [ ] Mejoras de interfaz y experiencia de usuario
-  - Selector de resolución
+  - Selector de resolución ✅
   - Zoom
   - Flash
   - Apagar pantalla durante la captura

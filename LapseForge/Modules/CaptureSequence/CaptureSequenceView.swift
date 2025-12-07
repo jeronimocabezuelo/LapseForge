@@ -60,18 +60,26 @@ struct CaptureSequenceView: View {
                 CameraPreview(session: $session.session)
                     .frame(height: 400)
                 VStack {
-                    HStack {
-                        Picker(
-                            String(localized: .CaptureSequence.camera),
-                            selection: $session.selectedCamera
-                        ) {
-                            Text(.CaptureSequence.back).tag(CaptureSequenceCamera.back)
-                            Text(.CaptureSequence.front).tag(CaptureSequenceCamera.front)
+                    Picker(
+                        String(localized: .CaptureSequence.camera),
+                        selection: $session.selectedCamera
+                    ) {
+                        Text(.CaptureSequence.back).tag(CaptureSequenceCamera.back)
+                        Text(.CaptureSequence.front).tag(CaptureSequenceCamera.front)
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: session.selectedCamera) { _, _ in
+                        session.updateCamera()
+                    }
+                    Picker("", selection: $session.selectedPreset) {
+                        ForEach(session.availablePresets) { preset in
+                            Text(preset.name).tag(preset)
                         }
-                        .pickerStyle(.segmented)
-                        .onChange(of: session.selectedCamera) { _, newCamera in
-                            session.updateCamera(to: newCamera)
-                        }
+                        
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: session.selectedPreset) { _, _ in
+                        session.updateCamera()
                     }
                     HStack {
                         VStack {
