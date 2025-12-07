@@ -10,12 +10,24 @@ import Combine
 import CoreImage
 import UIKit.UIImage
 
+enum CaptureSequenceCamera {
+    case front
+    case back
+    
+    fileprivate var position: AVCaptureDevice.Position {
+        switch self {
+        case .front: return .front
+        case .back: return .back
+        }
+    }
+}
+
 class CaptureSequenceSession: NSObject, ObservableObject {
     let sequence: LapseSequence
     
     @Published var interval: Double = 1.0
     @Published var unit: TimeUnit = .seconds
-    @Published var selectedCamera: AVCaptureDevice.Position = .back
+    @Published var selectedCamera: CaptureSequenceCamera = .back
     
     @Published var isRecording: Bool = false
     @Published var startCurrentRecording: Date?
@@ -217,7 +229,8 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         lastSentNextCaptureIn = -1
     }
     
-    func updateCamera(to position: AVCaptureDevice.Position) {
+    func updateCamera(to camera: CaptureSequenceCamera) {
+        let position = camera.position
         session.beginConfiguration()
         session.inputs.forEach { session.removeInput($0) }
         addVideoInput(position: position)

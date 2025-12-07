@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AVFoundation // Para las posibles cámaras TODO: Mover al sessión
 
 enum TimeUnit: String, CaseIterable, Identifiable {
     case milliseconds, seconds, minutes, hours
@@ -66,8 +65,8 @@ struct CaptureSequenceView: View {
                             String(localized: .CaptureSequence.camera),
                             selection: $session.selectedCamera
                         ) {
-                            Text(.CaptureSequence.back).tag(AVCaptureDevice.Position.back)
-                            Text(.CaptureSequence.front).tag(AVCaptureDevice.Position.front)
+                            Text(.CaptureSequence.back).tag(CaptureSequenceCamera.back)
+                            Text(.CaptureSequence.front).tag(CaptureSequenceCamera.front)
                         }
                         .pickerStyle(.segmented)
                         .onChange(of: session.selectedCamera) { _, newCamera in
