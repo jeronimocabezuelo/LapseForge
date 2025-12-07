@@ -82,6 +82,13 @@ struct CaptureSequenceView: View {
                         session.updateCamera()
                     }
                     HStack {
+                        Text("Zoom \(session.zoomFactor, specifier: "%.2f")")
+                        Slider(
+                            value: $session.zoomFactor,
+                            in: session.zoomRange
+                        )
+                    }
+                    HStack {
                         VStack {
                             Slider(
                                 value: $session.interval,

@@ -54,8 +54,14 @@ class CaptureSequenceSession: NSObject, ObservableObject {
     
     @Published var interval: Double = 1.0
     @Published var unit: TimeUnit = .seconds
+    
     @Published var selectedCamera: CaptureSequenceCamera = .back
     @Published var selectedPreset: CaptureSequencePreset = .hd4k
+    @Published var zoomFactor: CGFloat = 1.0
+    var minZoomFactor: CGFloat = 1.0
+    var maxZoomFactor: CGFloat = 1.0
+    
+    var zoomRange: ClosedRange<CGFloat> { minZoomFactor...maxZoomFactor }
     
     @Published var isRecording: Bool = false
     @Published var startCurrentRecording: Date?
@@ -149,6 +155,11 @@ class CaptureSequenceSession: NSObject, ObservableObject {
             self?.session.startRunning()
         }
         
+        $zoomFactor
+            .removeDuplicates()
+            .sink { [weak self] _ in self?.updateZoom() }
+            .store(in: &cancellables)
+        
         // Suscripción a eventos del iPhone (o Watch si esta clase vive en iPhone)
         WatchConnectivityManager.shared.receivedMessageSubject
             .receive(on: DispatchQueue.main)
@@ -224,9 +235,23 @@ class CaptureSequenceSession: NSObject, ObservableObject {
 
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position) else { return }
         
+        updateZoomLimits(device: device)
+        
         guard let input = try? AVCaptureDeviceInput(device: device) else { return }
         if session.canAddInput(input) {
             session.addInput(input)
+        }
+    }
+    
+    func updateZoomLimits(device: AVCaptureDevice) {
+        minZoomFactor = device.minAvailableVideoZoomFactor
+        maxZoomFactor = min(device.maxAvailableVideoZoomFactor, 5)
+        
+        // Clamp current zoomFactor to new limits
+        if zoomFactor < minZoomFactor {
+            zoomFactor = minZoomFactor
+        } else if zoomFactor > maxZoomFactor {
+            zoomFactor = maxZoomFactor
         }
     }
     
@@ -272,6 +297,21 @@ class CaptureSequenceSession: NSObject, ObservableObject {
         session.inputs.forEach { session.removeInput($0) }
         addVideoInput()
         session.commitConfiguration()
+    }
+    
+    private func updateZoom() {
+        guard let videoInput = session.inputs.compactMap({ $0 as? AVCaptureDeviceInput }).first(where: { $0.device.hasMediaType(.video) }) else { return }
+        
+        let device = videoInput.device
+        let newZoomFactor = min(max(zoomFactor, minZoomFactor), maxZoomFactor)
+        
+        do {
+            try device.lockForConfiguration()
+            device.videoZoomFactor = newZoomFactor
+            device.unlockForConfiguration()
+        } catch {
+            print("Failed to lock device for configuration: \(error.localizedDescription)")
+        }
     }
     
     func takePhoto() {
