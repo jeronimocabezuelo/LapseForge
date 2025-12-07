@@ -94,7 +94,7 @@ struct CaptureSequenceView: View {
     var nextCaptureCountdown: TimeInterval {
         let result = Date().distance(to: nextCapture)
         
-        print("Next capture countdown: \(result)")
+//        print("Next capture countdown: \(result)")
         
         return result
     }
@@ -158,10 +158,12 @@ struct CaptureSequenceView: View {
                         }
                     }
                 }, label: {
-                    Image(systemName: isRecording ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(isRecording ? .red : .green)
+                    Image(systemName: isRecording ? "pause.fill" : "play.fill")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                        .padding()
+                        .squareByIntrinsic()
+                        .glassEffect(.regular.tint(isRecording ? .red : .green).interactive())
                 })
                 
                 Text(.CaptureSequence.captures(session.sequence.count))
@@ -183,13 +185,13 @@ struct CaptureSequenceView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(.Common.close) {
+                    Button(.Common.close, systemImage: "xmark") {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(.Common.save) {
+                    Button(.Common.save, systemImage: "checkmark") {
                         onSaveSequence?(session.sequence)
                         dismiss()
                     }
@@ -200,6 +202,7 @@ struct CaptureSequenceView: View {
                     takePhoto()
                 }
             }
+            .idleTimerDisabled(isRecording)
         }
     }
     
@@ -301,59 +304,8 @@ extension CaptureSequenceSession: AVCapturePhotoCaptureDelegate {
     }
 }
 
-// TODO: Mover
-struct DisplayedTextView<S>: View where S: StringProtocol {
-    var text: () -> S
-    @State private var displayedText: S = ""
-    var body: some View {
-        
-        Text(displayedText)
-            .onAppear { displayedText = text() }
-            .onDisplayLinkUpdate {
-                displayedText = text()
-            }
+#Preview {
+    NavigationStack {
+        CaptureSequenceView(sequence: .mock)
     }
 }
-
-extension DisplayedTextView where S == String {
-    init(_ text: @escaping () -> LocalizedStringResource) {
-        self.init { String(localized: text()) }
-    }
-}
-
-class DisplayLinkObserver: ObservableObject {
-    @Published var timestamp: CFTimeInterval = 0
-    private var displayLink: CADisplayLink?
-    
-    init() {
-        displayLink = CADisplayLink(target: self, selector: #selector(update))
-        displayLink?.add(to: .main, forMode: .common)
-    }
-    
-    @objc private func update(link: CADisplayLink) {
-        timestamp = link.timestamp
-    }
-    
-    deinit {
-        displayLink?.invalidate()
-    }
-}
-
-struct DisplayLinkModifier: ViewModifier {
-    @StateObject private var displayLink = DisplayLinkObserver()
-    var onUpdate: (() -> Void)
-    
-    func body(content: Content) -> some View {
-        content
-            .onChange(of: displayLink.timestamp) { _, _ in
-                onUpdate()
-            }
-    }
-}
-
-extension View {
-    func onDisplayLinkUpdate(_ perform: @escaping () -> Void) -> some View {
-        modifier(DisplayLinkModifier(onUpdate: perform))
-    }
-}
-

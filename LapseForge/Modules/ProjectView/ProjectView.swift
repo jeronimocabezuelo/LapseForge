@@ -9,8 +9,9 @@ import SwiftUI
 
 private class ProjectViewModel: ObservableObject {
     @Published var selectedSequence: LapseSequence?
-    @Published var scrubber: TimeInterval?
+    @Published var scrubber: TimeInterval = .zero
     @Published var showPhotoPicker: Bool = false
+    @Published var isPlaying: Bool = false
     
     @Published var catalogSequence: LapseSequence?
     @Published var pickedUrl: URL?
@@ -22,13 +23,12 @@ struct ProjectView: View {
     
     @StateObject private var viewModel = ProjectViewModel()
     
+    @Namespace private var namespace
+    
     @ObservedObject var exporter: Exporter
     
     var currentSequence: LapseSequence? {
-        guard let scrubber = viewModel.scrubber else {
-            return nil
-        }
-        let sequence = project.sequence(at: scrubber)?.sequence
+        let sequence = project.sequence(at: viewModel.scrubber)?.sequence
         return sequence
     }
     
@@ -37,7 +37,8 @@ struct ProjectView: View {
             // Previsualización
             PreviewView(
                 project: project,
-                scrubber: $viewModel.scrubber
+                scrubber: $viewModel.scrubber,
+                isPlaying: $viewModel.isPlaying
             )
             
             // Línea de tiempo avanzada
@@ -45,13 +46,15 @@ struct ProjectView: View {
                 project: project,
                 scrubber: $viewModel.scrubber,
                 selectedSequence: $viewModel.selectedSequence,
-                showPhotoPicker: $viewModel.showPhotoPicker
+                showPhotoPicker: $viewModel.showPhotoPicker,
+                isPlaying: $viewModel.isPlaying
             )
             // Vista de configuración
             if let currentSequence {
                 ConfigurationSequenceView(
                     currentSequence: currentSequence,
-                    catalogSequence: $viewModel.catalogSequence
+                    catalogSequence: $viewModel.catalogSequence,
+                    namespace: namespace
                 )
             }
         }
@@ -83,6 +86,12 @@ struct ProjectView: View {
                 SequenceCatalogView(
                     sequence: sequence,
                     onSaveSequence: saveProject
+                )
+                .navigationTransition(
+                    .zoom(
+                        sourceID: "catalog_transition",
+                        in: namespace
+                    )
                 )
             }
         )

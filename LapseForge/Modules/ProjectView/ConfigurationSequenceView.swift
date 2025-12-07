@@ -10,6 +10,8 @@ struct ConfigurationSequenceView: View {
     var currentSequence: LapseSequence
     @Binding var catalogSequence: LapseSequence?
     
+    var namespace: Namespace.ID
+    
     @ViewBuilder
     var nameAndDate: some View {
         HStack {
@@ -78,6 +80,8 @@ struct ConfigurationSequenceView: View {
             systemImageName: "photo.stack",
             title: .Project.frameCatalog
         )
+        .glassEffectID("catalog_transition", in: namespace)
+        .matchedTransitionSource(id: "catalog_transition", in: namespace)
     }
     
     var body: some View {
@@ -86,10 +90,13 @@ struct ConfigurationSequenceView: View {
             HStack(alignment: .top) {
                 durationView
                 VStack {
-                    reversedButton
-                    rotateButton
-                    catalogButton
+                    GlassEffectContainer {
+                        reversedButton
+                        rotateButton
+                        catalogButton
+                    }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
         .padding()
@@ -109,16 +116,23 @@ private struct CustomButton: View {
                     .frame(maxWidth: .infinity)
             }
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical)
-        .background(.ultraThickMaterial)
-        .clipShape(.buttonBorder)
+        .controlSize(.large)
+        .buttonStyle(.glass)
     }
 }
 
 #Preview {
-    ConfigurationSequenceView(
-        currentSequence: .mock,
-        catalogSequence: .constant(nil)
-    )
+    ConfigurationSequencePreview()
+}
+
+private struct ConfigurationSequencePreview: View {
+    @Namespace private var namespace
+    
+    var body: some View {
+        ConfigurationSequenceView(
+            currentSequence: .mock,
+            catalogSequence: .constant(nil),
+            namespace: namespace
+        )
+    }
 }

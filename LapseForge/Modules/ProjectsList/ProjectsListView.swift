@@ -54,12 +54,12 @@ struct ProjectsListView: View {
                     .background(.background.opacity(0.5))
                 VStack {
                     VStack(alignment: .leading) {
-                        Text(.ProjectsList.exporting)
-                        ProgressView(value: status.exportProgress, total: 1)
-                        Text(.ProjectsList.unifying)
-                        ProgressView(value: status.unifyProgress, total: 1)
+                        Text(status.currentTitle)
+                        ProgressView(value: status.currentValue, total: 1)
+                        Text(.ProjectsList.totalProgress)
+                        ProgressView(value: status.totalValue, total: 1)
                     }
-                    if status.success {
+                    if case .success = status {
                         Text(.ProjectsList.videoSaved)
                         Button(.Common.ok) {
                             self.exporter.status = nil

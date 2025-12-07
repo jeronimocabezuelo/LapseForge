@@ -9,25 +9,28 @@ import SwiftUI
 
 struct TimeLineView: View {
     @State private var scrollContentHeight: CGFloat = 0
+    @State private var timelineWidth: CGFloat = 0
     @State private var alertModel: AlertModel?
+    @State private var showConfirmationDialog: Bool = false
     @State private var position = ScrollPosition(edge: .top)
     let project: LapseProject
-    @Binding var scrubber: TimeInterval?
+    @Binding var scrubber: TimeInterval
     @Binding var selectedSequence: LapseSequence?
     @Binding var showPhotoPicker: Bool
+    @Binding var isPlaying: Bool
     
     let scrollCoordinateSpace: NamedCoordinateSpace = .named("Scroll")
     let imageWidth = 20
     
     private var pixelsPerSecond: CGFloat {
-        UIScreen.main.bounds.width / 45
+        timelineWidth / 45
     }
     
     @ViewBuilder
     var timeMarkers: some View {
         let markerInterval: TimeInterval = 15.0
         let totalDuration = project.totalDuration
-        let horizontalInset: CGFloat = UIScreen.main.bounds.width/2
+        let horizontalInset: CGFloat = timelineWidth/2
         HStack(alignment: .center, spacing: 0) {
             Spacer().frame(width: horizontalInset, height: 10)
             ForEach(0..<Int(totalDuration / markerInterval) + 1, id: \.self) { index in
@@ -61,7 +64,8 @@ struct TimeLineView: View {
             project: project,
             selectedSequence: $selectedSequence,
             pixelsPerSecond: pixelsPerSecond,
-            imageWidth: imageWidth
+            imageWidth: imageWidth,
+            timelineWidth: timelineWidth
         )
     }
     
@@ -77,7 +81,23 @@ struct TimeLineView: View {
                     scrollContentHeight = newHeight
                 }
                 .onChange(of: innerGeo.frame(in: scrollCoordinateSpace).minX) { _, newOffset in
-                    updateSelectedSecond(withOffset: newOffset)
+                    // Solo actualizamos el scrubber desde geometría si NO estamos en reproducción
+                    if !isPlaying {
+                        updateSelectedSecond(withOffset: newOffset)
+                    }
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private var widthReader: some View {
+        GeometryReader { geo in
+            Color.clear
+                .onAppear {
+                    timelineWidth = geo.size.width
+                }
+                .onChange(of: geo.size.width) { _, newWidth in
+                    timelineWidth = newWidth
                 }
         }
     }
@@ -95,49 +115,21 @@ struct TimeLineView: View {
     
     @ViewBuilder
     var addSequenceButton: some View {
-        Button(
-            action: {
-                let cameraButton = AlertButton(
-                    title: .Project.camera,
-                    action: {
-                        selectedSequence = .init()
-                    }
-                )
-                
-                let galeryButton = AlertButton(
-                    title: .Project.galery,
-                    action: {
-                        showPhotoPicker = true
-                    }
-                )
-                alertModel = .init(
-                    title: .Project.newSequenceAlertTitle,
-                    message: .Project.newSequenceAlertMessage,
-                    buttons: [
-                        cameraButton,
-                        galeryButton,
-                        .cancel()
-                    ]
-                )
-            },
+        ExpandableGlassMenu(
             label: {
-                Image(systemName: "plus.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: max(scrollContentHeight - 32, 20))
+                Image(systemName: "plus")
+                    .font(.title)
+                    .squareByIntrinsic()
+                    .padding()
+            },
+            content: {
+                AddingSelector(
+                    selectedSequence: $selectedSequence,
+                    showPhotoPicker: $showPhotoPicker
+                )
             }
         )
-        .padding(.horizontal)
-        .background(
-            .ultraThinMaterial
-        )
-        .clipShape(.circle)
-        .shadow(
-            color: .black.opacity(0.8),
-            radius: 2,
-            x: 1,
-            y: 1
-        )
+        .padding(.horizontal, 14)
     }
     
     var body: some View {
@@ -153,6 +145,9 @@ struct TimeLineView: View {
                 backgroundReader
             }
         }
+        .background {
+            widthReader
+        }
         .scrollPosition($position)
         .coordinateSpace(scrollCoordinateSpace)
         .overlay {
@@ -162,14 +157,44 @@ struct TimeLineView: View {
             addSequenceButton
         }
         .alert(model: $alertModel)
-        .onChange(of: scrubber ?? .zero) { _, newValue in
-            position.scrollTo(x: newValue * pixelsPerSecond)
+        .onChange(of: scrubber) { _, newValue in
+            guard pixelsPerSecond > 0 else { return }
+            if isPlaying {
+                position.scrollTo(x: newValue * pixelsPerSecond)
+            }
         }
     }
     
     private func updateSelectedSecond(withOffset offset: CGFloat) {
+        guard pixelsPerSecond > 0 else { return }
         let newScrubber = max(min(-offset / pixelsPerSecond, project.totalDuration), .zero)
-        self.scrubber = newScrubber
+        if abs(scrubber - newScrubber) <= 0.001 { return }
+        scrubber = newScrubber
+    }
+}
+
+private struct AddingSelector: View {
+    @Binding var selectedSequence: LapseSequence?
+    @Binding var showPhotoPicker: Bool
+    
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        VStack {
+            Text(.Project.newSequenceAlertTitle)
+            
+            Button(.Project.camera) {
+                dismiss()
+                selectedSequence = .init()
+            }
+            .buttonStyle(.glassProminent)
+            Button(.Project.galery) {
+                dismiss()
+                showPhotoPicker = true
+            }
+            .buttonStyle(.glassProminent)
+        }
+        .padding()
+        .frame(width: 200, height: 200)
     }
 }
 
@@ -178,9 +203,10 @@ struct SequencesView: View {
     @Binding var selectedSequence: LapseSequence?
     let pixelsPerSecond: CGFloat
     let imageWidth: Int
+    let timelineWidth: CGFloat
     
     var body: some View {
-        let horizontalInset: CGFloat = UIScreen.main.bounds.width/2
+        let horizontalInset: CGFloat = timelineWidth/2
         HStack(alignment: .top, spacing: 0) {
             Spacer().frame(width: horizontalInset, height: 10)
             ForEach(project.sequences) { sequence in

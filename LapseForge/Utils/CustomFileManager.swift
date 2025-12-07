@@ -98,12 +98,13 @@ class CustomFileManager {
                 }
         }
         
-        // --- 3. Carpeta temporal ---
+        // --- 3. Carpeta temporal (solo .mp4) ---
         let tempURL = fileManager.temporaryDirectory
         try fileManager.contentsOfDirectory(at: tempURL, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension.lowercased() == "mp4" }
             .forEach { url in
                 try fileManager.removeItem(at: url)
-                print("Removed temp item: \(url.lastPathComponent)")
+                print("Removed temp mp4: \(url.lastPathComponent)")
             }
     }
 }

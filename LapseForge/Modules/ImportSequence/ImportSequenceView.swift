@@ -96,6 +96,7 @@ struct ImportSequenceView: View {
                             }
                         }
                     }
+                    .buttonStyle(.glassProminent)
                     .disabled(asset.isNull)
                 }
                 .padding()
