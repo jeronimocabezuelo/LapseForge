@@ -35,7 +35,7 @@ Por ahora, LapseForge no está disponible en la App Store. Próximamente aquí s
   - Apagar pantalla durante la captura
   - Soporte dirección al capturar
   - Onion Skin
-- [ ] Gestión desde Apple Watch: iniciar/detener capturas remotamente
+- [X] Gestión desde Apple Watch: iniciar/detener capturas remotamente
 
 ### Versión 1.2
 - [ ] Soporte para edición básica de las secuencias (recortar, reordenar, cambiar duración)
