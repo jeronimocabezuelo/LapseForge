@@ -25,7 +25,7 @@ Por ahora, LapseForge no está disponible en la App Store. Próximamente aquí s
 - [X] Liberación automática de archivos y recursos cuando se elimina una secuencia o proyecto
 - [X] Icono
 - [X] Traducción a otros idiomas (por ejemplo, inglés)
-- [ ] Publicar la app en App Store
+- [X] Publicar la app en App Store
 
 ### Versión 1.1
 - [ ] Mejoras de interfaz y experiencia de usuario
