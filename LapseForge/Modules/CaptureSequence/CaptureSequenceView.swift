@@ -43,6 +43,8 @@ enum TimeUnit: String, CaseIterable, Identifiable {
 }
 
 struct CaptureSequenceView: View {
+    @State private var showSettings = false
+    
     init(sequence: LapseSequence, onSaveSequence: ((LapseSequence) -> Void)? = nil) {
         _session = .init(wrappedValue: .init(sequence: sequence))
         self.onSaveSequence = onSaveSequence
@@ -54,12 +56,16 @@ struct CaptureSequenceView: View {
     
     @StateObject var session: CaptureSequenceSession
     
-    var body: some View {
-        NavigationStack {
-            VStack {
-                CameraPreview(session: $session.session)
-                    .frame(height: 400)
-                VStack {
+    @ViewBuilder
+    var settingsMenu: some View {
+        ExpandableGlassMenu(
+            label: {
+                Image(systemName: "gear")
+                    .font(.title)
+                    .squareByIntrinsic()
+                    .padding()
+            }, content: {
+                VStack(spacing: 16) {
                     Picker(
                         String(localized: .CaptureSequence.camera),
                         selection: $session.selectedCamera
@@ -75,7 +81,6 @@ struct CaptureSequenceView: View {
                         ForEach(session.availablePresets) { preset in
                             Text(preset.name).tag(preset)
                         }
-                        
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: session.selectedPreset) { _, _ in
@@ -89,58 +94,53 @@ struct CaptureSequenceView: View {
                         )
                     }
                     Toggle(.CaptureSequence.flash, isOn: $session.torchEnabled)
-                    HStack {
-                        VStack {
-                            Slider(
-                                value: $session.interval,
-                                in: session.unit.range,
-                                step: session.unit.step
-                            )
-                            Text(
-                                .CaptureSequence.interval(
-                                    Int(session.interval),
-                                    session.unit.formatted
-                                )
-                            )
-                        }
-                        Picker("", selection: $session.unit) {
-                            ForEach(TimeUnit.allCases) { u in
-                                Text(u.rawValue).tag(u)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: session.unit) { _, newUnit in
-                            session.interval = newUnit.range.lowerBound
-                        }
-                    }
                 }
-                .padding(.horizontal)
-                Button(action: {
-                    session.playPauseTapped()
-                }, label: {
-                    Image(systemName: session.isRecording ? "pause.fill" : "play.fill")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                        .padding()
-                        .squareByIntrinsic()
-                        .glassEffect(.regular.tint(session.isRecording ? .red : .green).interactive())
-                })
-                
-                Text(.CaptureSequence.captures(session.sequence.count))
-                DisplayedTextView {
-                    .CaptureSequence.elapsedTime(formatElapsedTime(session.recordingDuration))
-                }
-                DisplayedTextView {
-                    .CaptureSequence.nextCapture(String(format: "%.1f", session.nextCaptureCountdown))
-                }
-                
-                if session.isRecording {
-                    Text(.CaptureSequence.recording)
-                        .foregroundColor(.red)
-                }
-                
-                Spacer()
+                .padding()
             }
+        )
+    }
+    
+    @ViewBuilder
+    var recordingView: some View {
+        VStack {
+            Button(action: {
+                session.playPauseTapped()
+            }, label: {
+                Image(systemName: session.isRecording ? "pause.fill" : "play.fill")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+                    .padding()
+                    .squareByIntrinsic()
+                    .glassEffect(.regular.tint(session.isRecording ? .red : .green).interactive())
+            })
+            
+            Text(.CaptureSequence.captures(session.sequence.count))
+            DisplayedTextView {
+                .CaptureSequence.elapsedTime(formatElapsedTime(session.recordingDuration))
+            }
+            DisplayedTextView {
+                .CaptureSequence.nextCapture(String(format: "%.1f", session.nextCaptureCountdown))
+            }
+            
+            Text(session.isRecording ? .CaptureSequence.recording : " ")
+                .foregroundColor(.red)
+        }
+        .padding()
+        .glassEffect(in: .rect(cornerRadius: 16))
+    }
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                CameraPreview(session: $session.session)
+                    .ignoresSafeArea(edges: .bottom)
+                recordingView
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                settingsMenu
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                
+                    .padding()
+            }
+            
             .navigationTitle(.CaptureSequence.new)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

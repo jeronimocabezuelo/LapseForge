@@ -13,9 +13,21 @@ struct CameraPreview: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
-        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
-        previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            let image = UIImageView(image: .cameraPlaceholder)
+            view.addSubview(image)
+            image.translatesAutoresizingMaskIntoConstraints = false
+            
+            image.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            image.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            image.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            image.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        } else {
+            
+            let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+            previewLayer.videoGravity = .resizeAspectFill
+            view.layer.addSublayer(previewLayer)
+        }
         return view
     }
     
