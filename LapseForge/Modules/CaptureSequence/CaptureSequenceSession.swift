@@ -139,6 +139,22 @@ class CaptureSequenceSession: NSObject, ObservableObject {
     private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
     private var cancellables = Set<AnyCancellable>()
     
+    private var rotation: CGFloat {
+        let result = rotationCoordinator?.videoRotationAngleForHorizonLevelCapture ?? .zero
+        
+        return result
+    }
+    
+    var orientation: UIDeviceOrientation {
+        switch rotation {
+        case 0: return .landscapeLeft
+        case 90: return .portrait
+        case 180: return .landscapeRight
+        case 270: return .portraitUpsideDown
+        default: return .portrait
+        }
+    }
+    
     private var ticker: AnyCancellable?
     private var lastSentElapsed: Int = -1
     private var lastSentNextCaptureIn: Int = -1
@@ -361,13 +377,24 @@ extension CaptureSequenceSession: AVCapturePhotoCaptureDelegate {
             return
         }
         
-        guard let data = photo.fileDataRepresentation() else {
+        guard let data = photo.fileDataRepresentation(),
+              let originalImage = UIImage(data: data) else {
+            print("No se pudo obtener la representación de los datos de la imagen")
+            return
+        }
+        
+        let angleDegrees = rotationCoordinator?.videoRotationAngleForHorizonLevelCapture ?? 0
+        let radians = CGFloat(angleDegrees) * .pi / 180 - (.pi / 2)
+        
+        let rotatedImage = originalImage.rotate(radians: radians)
+        
+        guard let rotatedData = rotatedImage?.jpegData(compressionQuality: 1) else {
             print("No se pudo obtener la representación de los datos de la imagen")
             return
         }
         
         do {
-            let capture = try CustomFileManager.shared.savePhoto(data, to: sequence)
+            let capture = try CustomFileManager.shared.savePhoto(rotatedData, to: sequence)
             sequence.addCapture(capture)
             
             // snapshot porque cambió capturesCount
@@ -383,14 +410,14 @@ extension CaptureSequenceSession: AVCaptureVideoDataOutputSampleBufferDelegate {
             guard !waitingImageReply else { return }
             
             guard WatchConnectivityManager.shared.isReachable else {
-                print("Watch not reachable")
+//                print("Watch not reachable")
                 return
             }
             
             waitingImageReply = true
             
             guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-                print("No imageBuffer")
+//                print("No imageBuffer")
                 waitingImageReply = false
                 return
             }
@@ -411,7 +438,7 @@ extension CaptureSequenceSession: AVCaptureVideoDataOutputSampleBufferDelegate {
             let context = CIContext()
     
             guard let cgImage = context.createCGImage(orientedImage, from: orientedImage.extent) else {
-                print("Failed to create CGImage")
+//                print("Failed to create CGImage")
                 waitingImageReply = false
                 return
             }
@@ -419,23 +446,47 @@ extension CaptureSequenceSession: AVCaptureVideoDataOutputSampleBufferDelegate {
             let downgradeImage = originalImage.resized(to: .custom(maxDimension: 80))
     
             guard let imageData = downgradeImage?.jpegData(maxMB: 0.05) else {
-                print("No imageData")
+//                print("No imageData")
                 waitingImageReply = false
                 return
             }
             
-            print("Sending Image with \(imageData.count)")
+//            print("Sending Image with \(imageData.count)")
             
             WatchConnectivityManager.shared.sendData(
                 imageData,
                 reply: { replyMessage in
-                    print("reply: \(replyMessage)")
+//                    print("reply: \(replyMessage)")
                     self.waitingImageReply = false
                 },
                 failure: { error in
-                    print("error: \(error.localizedDescription)")
+//                    print("error: \(error.localizedDescription)")
                     self.waitingImageReply = false
                 }
             )
         }
+}
+
+extension UIImage {
+    func rotate(radians: CGFloat) -> UIImage? {
+        var newSize = CGRect(origin: CGPoint.zero, size: self.size).applying(CGAffineTransform(rotationAngle: radians)).size
+        // Trim off the extremely small float value to prevent core graphics from rounding it up
+        newSize.width = floor(newSize.width)
+        newSize.height = floor(newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        // Move origin to middle
+        context.translateBy(x: newSize.width/2, y: newSize.height/2)
+        // Rotate around middle
+        context.rotate(by: radians)
+        // Draw the image at its center
+        self.draw(in: CGRect(x: -self.size.width/2, y: -self.size.height/2, width: self.size.width, height: self.size.height))
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
 }

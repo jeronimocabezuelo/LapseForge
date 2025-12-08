@@ -43,7 +43,7 @@ enum TimeUnit: String, CaseIterable, Identifiable {
 }
 
 struct CaptureSequenceView: View {
-    @State private var showSettings = false
+    @State private var orientation: UIDeviceOrientation = .portrait
     
     init(sequence: LapseSequence, onSaveSequence: ((LapseSequence) -> Void)? = nil) {
         _session = .init(wrappedValue: .init(sequence: sequence))
@@ -55,6 +55,31 @@ struct CaptureSequenceView: View {
     @Environment(\.dismiss) private var dismiss
     
     @StateObject var session: CaptureSequenceSession
+    
+    var uiRotationAngle: Double {
+        switch orientation {
+        case .portrait: return 0
+        case .landscapeLeft: return 90
+        case .landscapeRight: return -90
+        case .portraitUpsideDown: return 180
+        default: return 0
+        }
+    }
+    
+    var settingsMenuAlingment: Alignment {
+        switch orientation {
+        case .portrait:
+            return .topTrailing
+        case .landscapeLeft:
+            return .bottomTrailing
+        case .landscapeRight:
+            return .bottomLeading
+        case .portraitUpsideDown:
+            return .bottomLeading
+        default:
+            return .topTrailing
+        }
+    }
     
     @ViewBuilder
     var settingsMenu: some View {
@@ -98,6 +123,24 @@ struct CaptureSequenceView: View {
                 .padding()
             }
         )
+        .padding()
+        .rotationEffect(.degrees(uiRotationAngle))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: settingsMenuAlingment)
+    }
+    
+    var recordingViewAlingment: Alignment {
+        switch orientation {
+        case .portrait:
+            return .bottom
+        case .landscapeLeft:
+            return .bottomLeading
+        case .landscapeRight:
+            return .bottomTrailing
+        case .portraitUpsideDown:
+            return .top
+        default:
+            return .bottom
+        }
     }
     
     @ViewBuilder
@@ -127,20 +170,19 @@ struct CaptureSequenceView: View {
         }
         .padding()
         .glassEffect(in: .rect(cornerRadius: 16))
+        .padding()
+        .rotationEffect(.degrees(uiRotationAngle))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: recordingViewAlingment)
     }
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 CameraPreview(session: $session.session)
                     .ignoresSafeArea(edges: .bottom)
                 recordingView
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 settingsMenu
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                
-                    .padding()
             }
-            
             .navigationTitle(.CaptureSequence.new)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -160,6 +202,10 @@ struct CaptureSequenceView: View {
             .onDisplayLinkUpdate {
                 if session.nextCaptureCountdown <= 0, session.isRecording {
                     session.takePhoto()
+                }
+                
+                if orientation != session.orientation {
+                    orientation = session.orientation
                 }
             }
             .idleTimerDisabled(session.isRecording)
